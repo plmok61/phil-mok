@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import logo from './darion.png';
-import './App.css';
+import logo from '../darion.png';
+import '../App.css';
+import Summary from './Summary';
 
 class App extends Component {
   render() {
@@ -13,6 +14,7 @@ class App extends Component {
         <p className="App-intro">
           Welcome to my awesome website.
         </p>
+        <Summary />
       </div>
     );
   }
