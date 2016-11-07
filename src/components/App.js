@@ -4,6 +4,7 @@ import '../App.css'
 import Summary from './Summary'
 import LinksToAccounts from './LinksToAccounts'
 import Container from './Container'
+import NotFound from './NotFound'
 
 class App extends Component {
   render() {
@@ -20,7 +21,7 @@ class App extends Component {
           <Route path='/' component={Container}>
             <IndexRoute component={Summary} />
             <Route path='/contact' component={LinksToAccounts} />
-            
+            <Route path='*' component={NotFound} />
           </Route>
         </Router>
       </div>
