@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
+import { Router, Route, Link, IndexRoute, hashHistory, browserHistory } from 'react-router'
 import '../App.css'
 import Summary from './Summary'
 import LinksToAccounts from './LinksToAccounts'
+import Container from './Container'
 
 class App extends Component {
   render() {
@@ -13,8 +15,14 @@ class App extends Component {
         <p className="App-intro">
           Welcome to my awesome website.
         </p>
-        <Summary />
-        <LinksToAccounts />
+
+        <Router history={hashHistory}>
+          <Route path='/' component={Container}>
+            <IndexRoute component={Summary} />
+            <Route path='/contact' component={LinksToAccounts} />
+            
+          </Route>
+        </Router>
       </div>
     );
   }
