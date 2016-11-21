@@ -22,3 +22,13 @@
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
+
+.navbar {
+  height: 70px;
+}
+
+.navLink {
+  font-size: 1.5em;
+  display: inline-block;
+  margin: 0 5px 0 5px;
+}

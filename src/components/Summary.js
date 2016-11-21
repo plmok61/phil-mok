@@ -1,4 +1,5 @@
 import React from 'react'
+import '../App.css'
 
 class Summary extends React.Component {
   constructor(props) {
@@ -10,6 +11,9 @@ class Summary extends React.Component {
   render () {
     return (
       <div>
+        <div className="App-header">
+          <h2>Phil Mok</h2>
+        </div>
         <p>My story goes here...</p>
       </div>
     )

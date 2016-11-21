@@ -10,13 +10,6 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <div className="App-header">
-          <h2>Phil Mok</h2>
-        </div>
-        <p className="App-intro">
-          Welcome to my awesome website.
-        </p>
-
         <Router history={hashHistory}>
           <Route path='/' component={Container}>
             <IndexRoute component={Summary} />
