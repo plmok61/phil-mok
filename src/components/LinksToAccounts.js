@@ -1,6 +1,6 @@
 import React from 'react'
 
-class LinksToAccounts extends React.Component {
+export default class LinksToAccounts extends React.Component {
   render () {
     return (
       <div>
@@ -11,5 +11,3 @@ class LinksToAccounts extends React.Component {
     )
   }
 }
-
-export default LinksToAccounts

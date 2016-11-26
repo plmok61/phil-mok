@@ -1,7 +1,7 @@
 import React from 'react'
 import '../App.css'
 
-class Summary extends React.Component {
+export default class Summary extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -19,5 +19,3 @@ class Summary extends React.Component {
     )
   }
 }
-
-export default Summary
