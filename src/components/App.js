@@ -4,16 +4,18 @@ import '../App.css'
 import Summary from './Summary'
 import LinksToAccounts from './LinksToAccounts'
 import Container from './Container'
+import MyWork from './MyWork'
 import NotFound from './NotFound'
 
 export default class App extends Component {
   render() {
     return (
-      <div>
+      <div className='appContainer'>
         <Router history={hashHistory}>
           <Route path='/' component={Container}>
             <IndexRoute component={Summary} />
             <Route path='/contact' component={LinksToAccounts} />
+            <Route path='/work' component={MyWork} />
             <Route path='*' component={NotFound} />
           </Route>
         </Router>
