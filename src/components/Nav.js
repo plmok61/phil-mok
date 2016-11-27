@@ -2,7 +2,7 @@ import React from 'react'
 import { Router, Route, Link, IndexRoute, hashHistory, browserHistory } from 'react-router'
 import '../App.css'
 
-export default Nav = () => (
+const Nav = () => (
   <div className='navbar'>
     <div className='navLink'>
       <Link to='/'>About Me</Link>
@@ -12,3 +12,5 @@ export default Nav = () => (
     </div>
   </div>
 )
+
+export default Nav

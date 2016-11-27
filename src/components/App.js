@@ -6,7 +6,7 @@ import LinksToAccounts from './LinksToAccounts'
 import Container from './Container'
 import NotFound from './NotFound'
 
-export default App extends Component {
+export default class App extends Component {
   render() {
     return (
       <div className="App">

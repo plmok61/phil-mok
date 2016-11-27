@@ -1,9 +1,11 @@
 import React from 'react'
 import Nav from './Nav'
 
-export default Container = (props) => (
+const Container = (props) => (
   <div>
     <Nav />
     {props.children}
   </div>
 )
+
+export default Container
