@@ -9,7 +9,7 @@ import NotFound from './NotFound'
 export default class App extends Component {
   render() {
     return (
-      <div className="App">
+      <div>
         <Router history={hashHistory}>
           <Route path='/' component={Container}>
             <IndexRoute component={Summary} />
