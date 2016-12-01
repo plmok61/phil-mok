@@ -1,5 +1,6 @@
 import React from 'react'
 import '../App.css'
+import profilePic from '../assets/profile-pic.jpg'
 
 export default class Summary extends React.Component {
   constructor(props) {
@@ -11,7 +12,8 @@ export default class Summary extends React.Component {
   render () {
     return (
       <div>
-        <div className="App-header">
+        <img src={profilePic} className="profile-pic" alt="profile-pic" />
+        <div>
           <h2>Phil Mok</h2>
         </div>
         <p>My story goes here...</p>

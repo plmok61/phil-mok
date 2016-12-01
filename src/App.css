@@ -1,5 +1,26 @@
+a:link {
+  color: #fff;
+  text-decoration: none;
+}
+
+a:visited {
+  color: #fff;
+  text-decoration: none;
+}
+
+a:hover {
+  color: blue;
+  text-decoration: none;
+}
+
+a:active {
+  color: #fff;
+  text-decoration: none;
+}
+
 .appContainer {
   text-align: center;
+  color: #fff;
 }
 
 .navbar {
@@ -10,4 +31,8 @@
   font-size: 1.5em;
   display: inline-block;
   margin: 0 5px 0 5px;
+}
+
+.profile-pic {
+  height: 300px;
 }
