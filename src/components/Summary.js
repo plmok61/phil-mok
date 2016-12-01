@@ -16,7 +16,7 @@ export default class Summary extends React.Component {
         <div>
           <h2>Phil Mok</h2>
         </div>
-        <p>My story goes here...</p>
+        <p>Under Construction</p>
       </div>
     )
   }
