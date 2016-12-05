@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Router, Route, Link, IndexRoute, hashHistory, browserHistory } from 'react-router'
+import { Router, Route, IndexRoute, hashHistory } from 'react-router'
 import '../App.css'
 import Summary from './Summary'
 import LinksToAccounts from './LinksToAccounts'
@@ -8,6 +8,7 @@ import MyWork from './MyWork'
 import NotFound from './NotFound'
 
 export default class App extends Component {
+
   render() {
     return (
       <div className='appContainer'>
@@ -20,7 +21,7 @@ export default class App extends Component {
           </Route>
         </Router>
       </div>
-    );
+    )
   }
 }
 
