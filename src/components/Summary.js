@@ -6,7 +6,7 @@ export default class Summary extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      gitHubData: false
+      gitHubData: false,
     }
   }
 
