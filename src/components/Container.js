@@ -1,9 +1,9 @@
 import React from 'react'
-import Nav from './Nav'
+import Navigation from './Nav'
 
 const Container = (props) => (
   <div>
-    <Nav />
+    <Navigation />
     {props.children}
   </div>
 )

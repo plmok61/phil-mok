@@ -35,4 +35,9 @@ a:active {
 
 .profile-pic {
   height: 300px;
+  border-radius: 150px;
+}
+
+.top-nav-link > a {
+  background-color: #222 !important;
 }

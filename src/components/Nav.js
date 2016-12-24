@@ -1,19 +1,31 @@
 import React from 'react'
 import { Router, Route, Link, IndexRoute, hashHistory, browserHistory } from 'react-router'
+import { Navbar, NavItem, Nav, NavDropdown, MenuItem } from 'react-bootstrap'
+import { LinkContainer } from 'react-router-bootstrap'
 import '../App.css'
 
-const Nav = () => (
-  <div className='navbar'>
-    <div className='navLink'>
-      <Link to='/'>About Me</Link>
-    </div>
-    <div className='navLink'>
-      <Link to='/work'>My Work</Link>
-    </div>
-    <div className='navLink'>
-      <Link to='/contact'>Contact</Link>
-    </div>
-  </div>
+const Navigation = () => (
+  <Navbar inverse collapseOnSelect>
+    <Navbar.Header>
+      <Navbar.Brand>
+        <Link to='/'>Phil Mok</Link>
+      </Navbar.Brand>
+      <Navbar.Toggle />
+    </Navbar.Header>
+    <Navbar.Collapse>
+      <Nav>
+        <LinkContainer to='/about'>
+          <NavItem eventKey={1} className="top-nav-link">About Me</NavItem>
+        </LinkContainer>
+        <LinkContainer to='/work'>
+          <NavItem eventKey={2} className="top-nav-link">My Work</NavItem>
+        </LinkContainer>
+        <LinkContainer to='/contact'>
+          <NavItem eventKey={2} className="top-nav-link">Contact</NavItem>
+        </LinkContainer>
+      </Nav>
+    </Navbar.Collapse>
+  </Navbar>
 )
 
-export default Nav
+export default Navigation
