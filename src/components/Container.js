@@ -1,11 +1,15 @@
-import React from 'react'
-import Navigation from './Nav'
+import React, { PropTypes } from 'react';
+import Navigation from './Nav';
 
 const Container = (props) => (
   <div>
     <Navigation />
     {props.children}
   </div>
-)
+);
 
-export default Container
+Container.propTypes = {
+  children: PropTypes.node.isRequired,
+};
+
+export default Container;

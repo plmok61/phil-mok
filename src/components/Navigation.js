@@ -1,8 +1,8 @@
-import React from 'react'
-import { Router, Route, Link, IndexRoute, hashHistory, browserHistory } from 'react-router'
-import { Navbar, NavItem, Nav, NavDropdown, MenuItem } from 'react-bootstrap'
-import { LinkContainer } from 'react-router-bootstrap'
-import '../App.css'
+import React from 'react';
+import { Link } from 'react-router';
+import { Navbar, NavItem, Nav } from 'react-bootstrap';
+import { LinkContainer } from 'react-router-bootstrap';
+import '../App.css';
 
 const Navigation = () => (
   <Navbar inverse collapseOnSelect>
@@ -28,4 +28,4 @@ const Navigation = () => (
   </Navbar>
 )
 
-export default Navigation
+export default Navigation;

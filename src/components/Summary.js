@@ -1,26 +1,26 @@
-import React from 'react'
-import '../App.css'
-import axios from 'axios'
+import React from 'react';
+import axios from 'axios';
+import '../App.css';
 
 export default class Summary extends React.Component {
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
       gitHubData: false,
     }
   }
 
-  componentDidMount () {
+  componentDidMount() {
     axios.get('https://api.github.com/users/plmok61')
     .then((response) => {
-      console.log(response.data)
+      console.log(response.data);
       this.setState({
-        gitHubData: response.data
-      })
-    })
+        gitHubData: response.data,
+      });
+    });
   }
 
-  render () {
+  render() {
     return (
       <div>
         <img src={this.state.gitHubData.avatar_url} className="profile-pic" alt="profile-pic" />
@@ -29,6 +29,6 @@ export default class Summary extends React.Component {
         </div>
         <p>Under Construction. Check back soon for updates!</p>
       </div>
-    )
+    );
   }
 }
