@@ -1,43 +1,8 @@
-a:link {
-  color: #fff;
-  text-decoration: none;
+.navContainer {
+  position: relative;
+  z-index: 1200;
 }
 
-a:visited {
-  color: #fff;
-  text-decoration: none;
-}
-
-a:hover {
-  color: blue;
-  text-decoration: none;
-}
-
-a:active {
-  color: #fff;
-  text-decoration: none;
-}
-
-.appContainer {
-  text-align: center;
-  color: #fff;
-}
-
-.navbar {
-  height: 70px;
-}
-
-.navLink {
-  font-size: 1.5em;
-  display: inline-block;
-  margin: 0 5px 0 5px;
-}
-
-.profile-pic {
-  height: 300px;
-  border-radius: 150px;
-}
-
-.top-nav-link > a {
-  background-color: #222 !important;
+.imageZoomerContainer {
+  height: 2000px;
 }
