@@ -1,3 +1,8 @@
+.navContainer {
+  position: relative;
+  z-index: 1200;
+}
+
 .imageZoomerContainer {
   height: 2000px;
 }

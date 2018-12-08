@@ -36,7 +36,7 @@ class SubNav extends Component {
                 <NavItem>
                   {
                     this.props.subNavFixedTop
-                    ? <Button color="link" onClick={backToTop}>Back to top</Button>
+                    ? <Button color="link" onClick={backToTop}><h2>Back to top</h2></Button>
                     : <h2>Scroll down</h2>
                   }
                 </NavItem>

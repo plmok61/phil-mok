@@ -102,7 +102,7 @@ class Navigation extends Component {
     }
 
     return (
-      <div className="bg-white">
+      <div className="bg-white navContainer">
         <div
           className={`bg-white ${lessThanMed ? 'fixed-top' : ''}`}
         >
@@ -134,7 +134,7 @@ class Navigation extends Component {
             className={!lessThanMed && this.state.subNavFixedTop ? 'fixed-top' : 'sticky-top'}
           />
         </div>
-        <div style={{ height: `${offset}px` }} />
+        {/* <div style={{ height: `${offset}px` }} /> */}
       </div>
     );
   }

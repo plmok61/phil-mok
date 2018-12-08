@@ -16,7 +16,6 @@ class Home extends Component {
   }
 
   componentDidMount() {
-    global.window.scrollTo(0, 0);
     axios.get('https://api.github.com/users/plmok61')
       .then((response) => {
         console.log(response.data);
@@ -25,18 +24,27 @@ class Home extends Component {
         });
       });
   }
+
   render() {
     return (
       <Container fluid>
         <ImageZoomer />
         <Container>
           <Row>
-            <Col>
-              <img src={this.state.gitHubData.avatar_url} className="profile-pic" alt="profile-pic" />
-              <div>
-                <h1>Phil Mok</h1>
+            <Col className="d-flex justify-content-center">
+              <div className="w-100 text-center">
+                <div className="m-auto w-50">
+                  <img
+                    src={this.state.gitHubData.avatar_url}
+                    className="img-fluid rounded-circle"
+                    alt="profile-pic"
+                  />
+                </div>
+                <div>
+                  <h1>Phil Mok</h1>
+                </div>
+                <p>Under Construction. Check back soon for updates!</p>
               </div>
-              <p>Under Construction. Check back soon for updates!</p>
             </Col>
           </Row>
         </Container>
