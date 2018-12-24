@@ -5,37 +5,32 @@ import {
   Col,
 } from 'reactstrap';
 import axios from 'axios';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import ImageZoomer from './image-zoomer';
+import { actions } from '../../actions/github.actions';
 
 class Home extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      gitHubData: false,
-    };
+  static propTypes = {
+    fetchGitHubData: PropTypes.func.isRequired,
   }
 
   componentDidMount() {
-    axios.get('https://api.github.com/users/plmok61')
-      .then((response) => {
-        console.log(response.data);
-        this.setState({
-          gitHubData: response.data,
-        });
-      });
+    this.props.fetchGitHubData();
   }
 
   render() {
+    console.log(this.props)
     return (
       <Container fluid>
         <ImageZoomer />
         <Container>
           <Row>
             <Col className="d-flex justify-content-center">
-              <div className="w-100 text-center">
+              <div className="wtext-center">
                 <div className="m-auto w-50">
                   <img
-                    src={this.state.gitHubData.avatar_url}
+                    src="https://avatars0.githubusercontent.com/u/3951831?v=4"
                     className="img-fluid rounded-circle"
                     alt="profile-pic"
                   />
@@ -53,4 +48,9 @@ class Home extends Component {
   }
 }
 
-export default Home;
+const mapStateToProps = state => ({
+  githubData: state.githubState.githubData,
+  loading: state.githubState.loading,
+});
+
+export default connect(mapStateToProps, actions)(Home);
