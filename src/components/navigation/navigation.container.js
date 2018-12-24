@@ -96,16 +96,14 @@ class Navigation extends Component {
     }
 
     const logoStyle = { width: '93px' };
-    if (!lessThanMed && !this.state.subNavFixedTop) {
+    if (!this.state.subNavFixedTop) {
       logoStyle.position = 'fixed';
       logoStyle.zIndex = '1200';
     }
 
     return (
       <div className="bg-white navContainer">
-        <div
-          className={`bg-white ${lessThanMed ? 'fixed-top' : ''}`}
-        >
+        <div className="bg-white">
           <div ref={this.navRefs.mainNavRef}>
             <Navbar color="white" light expand="md">
               <Container>
@@ -115,14 +113,11 @@ class Navigation extends Component {
                 >
                   Phil Mok
                 </NavbarBrand>
-                <NavbarToggler onClick={this.toggleNav} />
-                <Collapse isOpen={this.state.navOpen} navbar>
-                  <Nav className="ml-auto" navbar>
-                    <NavItem>
-                      <NavLink className="nav-link" to="/">Home</NavLink>
-                    </NavItem>
-                  </Nav>
-                </Collapse>
+                <Nav className="ml-auto" navbar>
+                  <NavItem>
+                    <NavLink className="nav-link" to="/">Home</NavLink>
+                  </NavItem>
+                </Nav>
               </Container>
             </Navbar>
           </div>
@@ -131,7 +126,7 @@ class Navigation extends Component {
             navOpen={this.state.navOpen}
             innerRef={this.navRefs.subNavRef}
             subNavFixedTop={this.state.subNavFixedTop}
-            className={!lessThanMed && this.state.subNavFixedTop ? 'fixed-top' : 'sticky-top'}
+            className={this.state.subNavFixedTop ? 'fixed-top' : 'sticky-top'}
           />
         </div>
         {/* <div style={{ height: `${offset}px` }} /> */}

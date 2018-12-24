@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import {
   Navbar,
   Nav,
   Container,
   NavbarBrand,
   NavItem,
-  Collapse,
   Button,
 } from 'reactstrap';
 
@@ -14,34 +14,34 @@ function backToTop() {
 }
 
 class SubNav extends Component {
+  static propTypes = {
+    className: PropTypes.string.isRequired,
+  }
+
   render() {
-    const lessThanMed = this.props.browser.lessThan.medium;
     return (
       <div
         className={`${this.props.className} border-bottom`}
         ref={this.props.innerRef}
       >
         <Navbar
-          className={lessThanMed && !this.props.navOpen ? 'd-none' : ''}
           color="white"
           light
           expand="md"
         >
           <Container>
             <NavbarBrand style={{ width: '93px' }}>
-              {this.props.subNavFixedTop && !lessThanMed ? 'Phil Mok' : ''}
+              {this.props.subNavFixedTop ? 'Phil Mok' : ''}
             </NavbarBrand>
-            <Collapse isOpen={this.props.navOpen} navbar>
-              <Nav className="ml-auto" navbar>
-                <NavItem>
-                  {
-                    this.props.subNavFixedTop
-                    ? <Button color="link" onClick={backToTop}><h2>Back to top</h2></Button>
-                    : <h2>Scroll down</h2>
-                  }
-                </NavItem>
-              </Nav>
-            </Collapse>
+            <Nav className="ml-auto" navbar>
+              <NavItem>
+                {
+                  this.props.subNavFixedTop
+                  ? <Button color="link" onClick={backToTop}><h2>Back to top</h2></Button>
+                  : <h2>Scroll down</h2>
+                }
+              </NavItem>
+            </Nav>
           </Container>
         </Navbar>
       </div>

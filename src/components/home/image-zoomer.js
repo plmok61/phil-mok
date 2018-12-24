@@ -22,7 +22,7 @@ class ImageZoomer extends Component {
     const image = document.getElementById('deepField');
     const windowWidth = global.window.innerWidth;
     const initialWidth = windowWidth * windowMultiplier;
-    const initialHeight = initialWidth * 0.625;
+    // const initialHeight = initialWidth * 0.625;``
 
     image.width = initialWidth;
     const callback = () => {
@@ -50,9 +50,8 @@ class ImageZoomer extends Component {
     const windowWidth = global.window.innerWidth;
     const imageHeight = this.state.imageWidth * 0.625;
     const percentZoomed = (this.state.imageWidth - windowWidth) / ((windowWidth * windowMultiplier) - windowWidth);
-    console.log(percentZoomed);
     const imageTopOffset = (imageHeight / 2) * percentZoomed;
-    // console.log('rerender', imageHeight / 2);
+
     return (
       <div style={{ height: windowWidth * windowMultiplier }}>
         <div
