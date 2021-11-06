@@ -1,26 +1,46 @@
-import React, { Component } from 'react';
-import { Route } from 'react-router-dom';
+/* eslint-disable no-unused-vars */
+import React, { useEffect, useRef, useState } from 'react';
 import '../App.css';
-import Navigation from './navigation/navigation.container';
-import Footer from './footer/footer.container.js';
-import Home from './home/home.container';
-import DrakeEquation from './drake-equation/drake-equation.container';
+import GameOfLife from '../game-of-life';
 
-class App extends Component {
-  componentDidMount() {
-    window.scrollTo(0, 0);
-  }
+const GOL = new GameOfLife();
 
-  render() {
-    return (
-      <div>
-        <Navigation />
-        <Route exact path="/" component={Home} />
-        <Route exact path="/drake-equation" component={DrakeEquation} />
-        <Footer />
-      </div>
-    );
-  }
+function App() {
+  const canvasRef = useRef(null);
+
+  const [gameOver, setGameOver] = useState(false);
+
+  useEffect(() => {
+    if (canvasRef.current) {
+      canvasRef.current.width = window.innerWidth;
+      canvasRef.current.height = window.innerHeight;
+
+      GOL.startGame(canvasRef.current);
+
+      const setGOTrue = () => setGameOver(true);
+      GOL.on('gameOver', setGOTrue);
+    }
+    return () => GOL.removeAllListeners();
+  }, []);
+
+  return (
+    <div>
+      {gameOver && (
+        <button
+          type="button"
+          onClick={() => {
+            GOL.startGame(canvasRef.current);
+            setGameOver(false);
+          }}
+        >
+          New Game
+        </button>
+      )}
+      <canvas ref={canvasRef}>
+        <p>fallback</p>
+      </canvas>
+    </div>
+  );
 }
 
 export default App;
