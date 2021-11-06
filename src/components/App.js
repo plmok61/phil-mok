@@ -1,64 +1,41 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable no-unused-vars */
 import React, { useEffect, useRef, useState } from 'react';
 import '../App.css';
 import GameOfLife from '../gol/game-of-life';
+import initialGrid from '../gol/initialGrid.json';
 
-const GOL = new GameOfLife({ gridSize: 100 });
-
-// function getMousePos(canvas, evt) {
-//   const rect = canvas.getBoundingClientRect();
-//   return {
-//     x: (evt.clientX - rect.left) / (rect.right - rect.left) * canvas.width,
-//     y: (evt.clientY - rect.top) / (rect.bottom - rect.top) * canvas.height,
-//   };
-// }
+const GOL = new GameOfLife({ gridSize: 100, initialGrid });
 
 function App() {
   const canvasRef = useRef(null);
-  const [grid, setGrid] = useState([]);
-  const [gameOver, setGameOver] = useState(true);
+  const [gameOver, setGameOver] = useState(false);
 
   useEffect(() => {
-    if (canvasRef.current) {
-      canvasRef.current.width = window.innerWidth;
-      canvasRef.current.height = window.innerHeight;
+    const canvas = canvasRef.current;
+    const canvasClick = (event) => {
+      const { clientX, clientY } = event;
+      const x = Math.round(clientX / Math.ceil(window.innerWidth / GOL.gridSize));
+      const y = Math.round(clientY / Math.ceil(window.innerHeight / GOL.gridSize));
+      GOL.editGrid(x, y);
+    };
+
+    if (canvas) {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
 
       GOL.initGrid(canvasRef.current);
-      setGrid(GOL.grid);
+      setTimeout(() => {
+        GOL.startGame();
+      }, 3000);
+
       const setGOTrue = () => setGameOver(true);
       GOL.on('gameOver', setGOTrue);
+
+      canvas.addEventListener('click', canvasClick);
     }
-    return () => GOL.removeAllListeners();
-  }, []);
-
-  useEffect(() => {
-    if (canvasRef.current) {
-      canvasRef.current.addEventListener('click', (event) => {
-        const { clientX, clientY } = event;
-        const x = Math.floor(clientX / Math.ceil(window.innerHeight / GOL.gridSize));
-        const y = Math.floor(clientY / Math.ceil(window.innerHeight / GOL.gridSize));
-        GOL.editGrid(x, y);
-      });
-      // let mouseDown = false;
-      // canvasRef.current.addEventListener('mousedown', () => {
-      //   mouseDown = true;
-      // });
-
-      // canvasRef.current.addEventListener('mouseup', () => {
-      //   mouseDown = false;
-      // });
-
-      // canvasRef.current.addEventListener('mousemove', (event) => {
-      //   if (mouseDown) {
-      //     const { clientX, clientY } = event;
-      //     const x = Math.floor(clientX / Math.ceil(window.innerHeight / GOL.gridSize));
-      //     const y = Math.floor(clientY / Math.ceil(window.innerHeight / GOL.gridSize));
-      //     GOL.editGrid(x, y);
-      //   }
-      // });
-    }
-    // return () => canvasRef.current.removeEventListener();
+    return () => {
+      GOL.removeAllListeners();
+      if (canvas) canvas.removeEventListener('click', canvasClick);
+    };
   }, []);
 
   return (
@@ -68,10 +45,11 @@ function App() {
       </canvas>
       {gameOver && (
         <button
+          className="newGameButton"
           type="button"
           onClick={() => {
-            GOL.startGame(canvasRef.current);
-            setGameOver(false);
+            GOL.initGrid(canvasRef.current);
+            GOL.startGame();
           }}
         >
           New Game

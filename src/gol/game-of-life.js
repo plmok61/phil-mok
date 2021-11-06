@@ -1,6 +1,5 @@
 /* eslint-disable no-unused-vars */
 import { EventEmitter } from 'events';
-import initialGrid from './initialGrid.json';
 
 const red = '#c81837';
 const orange = '#f77524';
@@ -34,10 +33,10 @@ function determineIfAlive(cell, numNeighbors) {
 }
 
 class GameOfLife extends EventEmitter {
-  constructor({ gridSize }) {
+  constructor({ gridSize, initialGrid }) {
     super();
     this.canvas = null;
-    this.grid = [];
+    this.grid = initialGrid;
     this.gridSize = gridSize;
     this.totalAlive = 0;
     this.turnsTotalSame = 0;
@@ -47,7 +46,7 @@ class GameOfLife extends EventEmitter {
   }
 
   createGrid() {
-    const grid = initialGrid;
+    const grid = [...this.grid];
     for (let row = 0; row < this.gridSize; row += 1) {
       for (let col = 0; col < this.gridSize; col += 1) {
         if (!grid[row][col].isAlive && grid[row][col].colorIndex === 0) {
@@ -145,28 +144,26 @@ class GameOfLife extends EventEmitter {
 
   drawCanvas() {
     const { innerWidth, innerHeight } = window;
-    const cellWidth = Math.ceil(innerHeight / this.gridSize);
+    const cellWidth = Math.ceil(innerWidth / this.gridSize);
+    const cellHeight = Math.ceil(innerHeight / this.gridSize);
     const ctx = this.canvas.getContext('2d');
     ctx.clearRect(0, 0, innerWidth, innerHeight);
 
     this.grid.forEach((row, y) => {
       row.forEach((cell, x) => {
         ctx.fillStyle = colorsFade[cell.colorIndex];
-        ctx.fillRect(x * cellWidth, y * cellWidth, cellWidth, cellWidth);
+        ctx.fillRect(x * cellWidth, y * cellHeight, cellWidth, cellHeight);
       });
     });
   }
 
   editGrid(x, y) {
-    console.log(x, y);
-    console.log(this.grid[y][x]);
     if (this.grid[y] && this.grid[y][x]) {
       const newIsAlive = this.grid[y][x].isAlive ? 0 : 1;
       this.grid[y][x].isAlive = newIsAlive;
       this.grid[y][x].colorIndex = newIsAlive ? aliveIndex : 0;
       // this.grid[y][x].colorIndex = newIsAlive ? aliveIndex : aliveIndex - 1;
       this.drawCanvas();
-      console.log(JSON.stringify(this.grid));
     }
   }
 
@@ -189,6 +186,7 @@ class GameOfLife extends EventEmitter {
 
     if (this.gameInterval) {
       clearInterval(this.gameInterval);
+      this.gameInterval = null;
     }
 
     this.gameInterval = setInterval(() => {

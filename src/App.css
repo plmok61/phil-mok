@@ -1,8 +1,8 @@
-.navContainer {
-  position: relative;
-  z-index: 1200;
-}
-
-.imageZoomerContainer {
-  height: 2000px;
+.newGameButton {
+  position: absolute;
+  top: 100px;
+  left: 50%;
+  border: 1px solid #c81837;
+  background-color: #f77524;
+  color: #0d1036;
 }
