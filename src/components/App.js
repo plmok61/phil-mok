@@ -25,7 +25,7 @@ function App() {
       GOL.initGrid(canvasRef.current);
       setTimeout(() => {
         GOL.startGame();
-      }, 3000);
+      }, 1000);
 
       const setGOTrue = () => setGameOver(true);
       GOL.on('gameOver', setGOTrue);

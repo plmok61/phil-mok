@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import { EventEmitter } from 'events';
 
 const red = '#c81837';
@@ -115,7 +114,6 @@ class GameOfLife extends EventEmitter {
   buildNextGrid() {
     const newGrid = [];
     let totalAlive = 0;
-    let noChange = true;
 
     this.grid.forEach((row, y) => {
       newGrid.push([]);
@@ -124,9 +122,6 @@ class GameOfLife extends EventEmitter {
         totalAlive += isAlive;
         const neightbors = this.countNeighbors(x, y);
         const newIsAlive = determineIfAlive(cell, neightbors);
-        if (newIsAlive !== isAlive) {
-          noChange = false;
-        }
         const minusOne = colorIndex > 0 ? colorIndex - 1 : 0;
         const newIndex = newIsAlive ? aliveIndex : minusOne;
         const newCell = {
@@ -162,8 +157,17 @@ class GameOfLife extends EventEmitter {
       const newIsAlive = this.grid[y][x].isAlive ? 0 : 1;
       this.grid[y][x].isAlive = newIsAlive;
       this.grid[y][x].colorIndex = newIsAlive ? aliveIndex : 0;
-      // this.grid[y][x].colorIndex = newIsAlive ? aliveIndex : aliveIndex - 1;
       this.drawCanvas();
+    }
+  }
+
+  newFrame() {
+    if (!this.gameOver) {
+      this.buildNextGrid();
+      this.drawCanvas();
+    } else {
+      clearInterval(this.gameInterval);
+      this.emit('gameOver');
     }
   }
 
@@ -190,13 +194,7 @@ class GameOfLife extends EventEmitter {
     }
 
     this.gameInterval = setInterval(() => {
-      if (!this.gameOver) {
-        this.buildNextGrid();
-        this.drawCanvas();
-      } else {
-        clearInterval(this.gameInterval);
-        this.emit('gameOver');
-      }
+      this.newFrame();
     }, 100);
   }
 }
