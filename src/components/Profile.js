@@ -43,8 +43,20 @@ function Profile() {
       </button>
       {expand && (
         <div className="links">
-          <a href="https://github.com/plmok61">GitHub</a>
-          <a href="https://www.linkedin.com/in/philiplmok/">LinkedIn</a>
+          <a
+            href="https://github.com/plmok61"
+            target="_blank"
+            rel="noreferrer"
+          >
+            GitHub
+          </a>
+          <a
+            href="https://www.linkedin.com/in/philiplmok/"
+            target="_blank"
+            rel="noreferrer"
+          >
+            LinkedIn
+          </a>
         </div>
       )}
     </div>
