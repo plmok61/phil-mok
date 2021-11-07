@@ -37,35 +37,39 @@ function GameOfLifeGrid() {
     };
   }, []);
 
+  useEffect(() => {
+    if (gameOver) {
+      GOL.initGrid(canvasRef.current);
+      GOL.startGame();
+      setGameOver(false);
+    }
+  }, [gameOver]);
+
   return (
     <div>
       <canvas ref={canvasRef}>
         <p>fallback</p>
       </canvas>
-      {(gameOver || true) && (
-        <>
-          <button
-            className="gameButton randomButton"
-            type="button"
-            onClick={() => {
-              GOL.initGrid(canvasRef.current);
-              GOL.startGame();
-            }}
-          >
-            Random Game
-          </button>
-          <button
-            className="gameButton resetButton"
-            type="button"
-            onClick={() => {
-              GOL.initGrid(canvasRef.current, initialGrid);
-              GOL.startGame();
-            }}
-          >
-            Reset Game
-          </button>
-        </>
-      )}
+      <button
+        className="gameButton randomButton"
+        type="button"
+        onClick={() => {
+          GOL.initGrid(canvasRef.current);
+          GOL.startGame();
+        }}
+      >
+        Random Game
+      </button>
+      <button
+        className="gameButton resetButton"
+        type="button"
+        onClick={() => {
+          GOL.initGrid(canvasRef.current, initialGrid);
+          GOL.startGame();
+        }}
+      >
+        Reset Game
+      </button>
     </div>
   );
 }

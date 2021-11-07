@@ -10,14 +10,9 @@ function Profile() {
 
   const fetchGHInfo = useCallback(async () => {
     const profile = await axios.get('https://api.github.com/users/plmok61');
-    const repos = await axios.get('https://api.github.com/users/plmok61/repos');
-
-    console.log(profile.data);
-    console.log(repos.data);
 
     setInfo({
       profilePic: profile.data.avatar_url,
-      repos: repos.data,
     });
   }, []);
 

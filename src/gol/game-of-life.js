@@ -51,25 +51,12 @@ class GameOfLife extends EventEmitter {
       for (let row = 0; row < this.gridSize; row += 1) {
         this.grid.push([]);
         for (let col = 0; col < this.gridSize; col += 1) {
-          // // Check if cell already has state so we do not overwrite cells from the initialGrid
-          // if (initialGrid) {
-          //   this.grid[row][col] = initialGrid[row][col];
-          // } else {
-          const isAlive = Math.random() > 0.85 ? 1 : 0;
+          const isAlive = Math.random() > 0.5 ? 1 : 0;
           const cell = {
             isAlive,
             colorIndex: isAlive ? aliveIndex : 0,
           };
           this.grid[row][col] = cell;
-          // }
-          // if (!this.grid[row][col].isAlive && this.grid[row][col].colorIndex === 0) {
-          //   const isAlive = Math.random() > 0.85 ? 1 : 0;
-          //   const cell = {
-          //     isAlive,
-          //     colorIndex: isAlive ? aliveIndex : 0,
-          //   };
-          //   this.grid[row][col] = cell;
-          // }
         }
       }
     }
