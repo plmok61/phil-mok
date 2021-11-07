@@ -6,7 +6,7 @@ const yellow = '#fcd549';
 const teal = '#39818e';
 const darkPurple = '#0d1036';
 
-const colors = [darkPurple, teal, yellow, orange, red];
+const colors = [darkPurple, teal, red, orange, yellow];
 const fade = [34, 21, 8, 3, 1];
 const fadeTotal = fade.reduce((acc, num) => {
   const result = acc + num;
@@ -32,10 +32,10 @@ function determineIfAlive(cell, numNeighbors) {
 }
 
 class GameOfLife extends EventEmitter {
-  constructor({ gridSize, initialGrid }) {
+  constructor({ gridSize }) {
     super();
     this.canvas = null;
-    this.grid = initialGrid;
+    this.grid = [];
     this.gridSize = gridSize;
     this.totalAlive = 0;
     this.turnsTotalSame = 0;
@@ -44,21 +44,35 @@ class GameOfLife extends EventEmitter {
     this.initialized = false;
   }
 
-  createGrid() {
-    const grid = [...this.grid];
-    for (let row = 0; row < this.gridSize; row += 1) {
-      for (let col = 0; col < this.gridSize; col += 1) {
-        if (!grid[row][col].isAlive && grid[row][col].colorIndex === 0) {
+  createGrid(initialGrid) {
+    if (initialGrid) {
+      this.grid = initialGrid;
+    } else {
+      for (let row = 0; row < this.gridSize; row += 1) {
+        this.grid.push([]);
+        for (let col = 0; col < this.gridSize; col += 1) {
+          // // Check if cell already has state so we do not overwrite cells from the initialGrid
+          // if (initialGrid) {
+          //   this.grid[row][col] = initialGrid[row][col];
+          // } else {
           const isAlive = Math.random() > 0.85 ? 1 : 0;
           const cell = {
             isAlive,
             colorIndex: isAlive ? aliveIndex : 0,
           };
-          grid[row][col] = cell;
+          this.grid[row][col] = cell;
+          // }
+          // if (!this.grid[row][col].isAlive && this.grid[row][col].colorIndex === 0) {
+          //   const isAlive = Math.random() > 0.85 ? 1 : 0;
+          //   const cell = {
+          //     isAlive,
+          //     colorIndex: isAlive ? aliveIndex : 0,
+          //   };
+          //   this.grid[row][col] = cell;
+          // }
         }
       }
     }
-    this.grid = grid;
   }
 
   countNeighbors(col, row) {
@@ -162,29 +176,34 @@ class GameOfLife extends EventEmitter {
   }
 
   newFrame() {
-    if (!this.gameOver) {
-      this.buildNextGrid();
-      this.drawCanvas();
-    } else {
+    if (this.gameOver) {
       clearInterval(this.gameInterval);
       this.emit('gameOver');
+      return;
     }
+    this.buildNextGrid();
+    this.drawCanvas();
   }
 
-  initGrid(canvas) {
+  initGrid(canvas, initialGrid) {
+    if (!canvas) {
+      console.error('You must pass a canvas element');
+      return;
+    }
     this.canvas = canvas;
     const { innerWidth, innerHeight } = window;
     this.canvas.width = innerWidth;
     this.canvas.height = innerHeight;
     this.turnsTotalSame = 0;
     this.gameOver = false;
-    this.createGrid();
+    this.createGrid(initialGrid);
     this.drawCanvas();
     this.initialized = true;
   }
 
   startGame() {
     if (!this.initialized) {
+      console.error('You must initGrid() first');
       return;
     }
 

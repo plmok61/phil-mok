@@ -1,10 +1,10 @@
-html, body, #root, .App {
+html, body, #root, .App, button {
   height: 100%;
   background-color: #0d1036;
+  font-family: 'Audiowide', cursive;
 }
 
 body {
   margin: 0;
   padding: 0;
-  font-family: sans-serif;
 }

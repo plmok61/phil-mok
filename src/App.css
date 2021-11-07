@@ -1,8 +1,78 @@
-.newGameButton {
+.gameButton {
   position: absolute;
-  top: 100px;
-  left: 50%;
+  top: 4px;
+  width: 80px;
+  height: 40px;
   border: 1px solid #c81837;
   background-color: #f77524;
   color: #0d1036;
+  border-radius: 4px;
+}
+
+.resetButton {
+  left: 4px;
+}
+
+.randomButton {
+  left: 88px;
+}
+
+.profilePicContainer {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  height: 100px;
+  width: 100px;
+  border-radius: 4px;
+  overflow: hidden;
+  transition: all 1s;
+  border: 1px solid #39818e;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  text-align: center;
+  background-color: white;
+}
+
+.expandContainer {
+  position: absolute;
+  height: 300px;
+  width: 200px;
+  top: calc(50% - 100px);
+  right: calc(50% - 100px);
+  transition: all 1s;
+}
+
+.imgButton {
+  border: none;
+  margin: 0;
+  padding: 0;
+  background-color: transparent;
+  cursor: pointer;
+  height: 100px;
+  width: 100px;
+  border-radius: 4px;
+  overflow: hidden;
+  transition: all 1s;
+}
+
+.imgButton img {
+  height: 100%;
+  width: 100%;
+}
+
+.expandButton {
+  border-radius: 4px;
+  height: 200px;
+  width: 200px;
+}
+
+.links {
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  justify-content: space-evenly;
+  width: 100%;
 }
