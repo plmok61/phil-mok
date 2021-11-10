@@ -1,3 +1,11 @@
+:root {
+  --red: #c81837;
+  --orange: #f77524;
+  --yellow: #fcd549;
+  --teal: #39818e;
+  --darkPurple: #0d1036;
+}
+
 html, body, #root, .App, button {
   height: 100%;
   background-color: #0d1036;
@@ -10,9 +18,9 @@ body {
 }
 
 a {
-  color: #39818e;
+  color: var(--yellow);
 }
 
 a:visited {
-  color: #fcd549;
+  color: var(--yellow);
 }

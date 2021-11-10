@@ -39,9 +39,9 @@ class GameOfLife extends EventEmitter {
     this.gridSize = gridSize;
     this.totalAlive = 0;
     this.turnsTotalSame = 0;
-    this.gameOver = false;
     this.gameInterval = null;
     this.initialized = false;
+    this.mousePosition = [0, 0];
   }
 
   createGrid(initialGrid) {
@@ -109,7 +109,11 @@ class GameOfLife extends EventEmitter {
       ? this.turnsTotalSame + 1
       : 0;
     this.totalAlive = totalAlive;
-    this.gameOver = this.turnsTotalSame > fadeTotal;
+
+    if (this.turnsTotalSame > fadeTotal) {
+      clearInterval(this.gameInterval);
+      this.emit('gameOver');
+    }
   }
 
   buildNextGrid() {
@@ -147,7 +151,13 @@ class GameOfLife extends EventEmitter {
 
     this.grid.forEach((row, y) => {
       row.forEach((cell, x) => {
-        ctx.fillStyle = colorsFade[cell.colorIndex];
+        const [mouseX, mouseY] = this.mousePosition;
+        let isHover = false;
+        if (mouseX === x && mouseY === y) {
+          isHover = true;
+        }
+        const color = isHover ? teal : colorsFade[cell.colorIndex];
+        ctx.fillStyle = color;
         ctx.fillRect(x * cellWidth, y * cellHeight, cellWidth, cellHeight);
       });
     });
@@ -163,13 +173,22 @@ class GameOfLife extends EventEmitter {
   }
 
   newFrame() {
-    if (this.gameOver) {
-      clearInterval(this.gameInterval);
-      this.emit('gameOver');
-      return;
-    }
     this.buildNextGrid();
     this.drawCanvas();
+  }
+
+  trackMouse(x, y) {
+    this.mousePosition = [x, y];
+
+    if (!this.gameInterval) {
+      this.drawCanvas();
+      const { innerWidth, innerHeight } = window;
+      const cellWidth = Math.ceil(innerWidth / this.gridSize);
+      const cellHeight = Math.ceil(innerHeight / this.gridSize);
+      const ctx = this.canvas.getContext('2d');
+      ctx.fillStyle = teal;
+      ctx.fillRect(x * cellWidth, y * cellHeight, cellWidth, cellHeight);
+    }
   }
 
   initGrid(canvas, initialGrid) {
@@ -182,7 +201,6 @@ class GameOfLife extends EventEmitter {
     this.canvas.width = innerWidth;
     this.canvas.height = innerHeight;
     this.turnsTotalSame = 0;
-    this.gameOver = false;
     this.createGrid(initialGrid);
     this.drawCanvas();
     this.initialized = true;
@@ -202,6 +220,31 @@ class GameOfLife extends EventEmitter {
     this.gameInterval = setInterval(() => {
       this.newFrame();
     }, 100);
+
+    this.emit('pause', false);
+  }
+
+  pauseGame() {
+    if (this.gameInterval) {
+      clearInterval(this.gameInterval);
+      this.gameInterval = null;
+      this.emit('pause', true);
+    }
+  }
+
+  clearGame() {
+    const blankGrid = [];
+    const rows = this.grid.length;
+    const cols = this.grid[0].length;
+    for (let y = 0; y < rows; y += 1) {
+      const row = [];
+      for (let x = 0; x < cols; x += 1) {
+        row.push({ isAlive: 0, colorIndex: 0 });
+      }
+      blankGrid.push(row);
+    }
+    this.createGrid(blankGrid);
+    this.drawCanvas();
   }
 }
 

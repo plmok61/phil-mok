@@ -3,10 +3,11 @@
   top: 4px;
   width: 80px;
   height: 40px;
-  border: 1px solid #c81837;
-  background-color: #f77524;
-  color: #0d1036;
+  border: 1px solid var(--red);
+  background-color: var(--orange);
+  color: var(--darkPurple);
   border-radius: 4px;
+  cursor: pointer;
 }
 
 .resetButton {
@@ -15,6 +16,14 @@
 
 .randomButton {
   left: 88px;
+}
+
+.pausePlayButton {
+  left: 172px;
+}
+
+.clearButton {
+  left: 256px
 }
 
 .profilePicContainer {
@@ -26,14 +35,14 @@
   border-radius: 4px;
   overflow: hidden;
   transition: all 1s;
-  border: 1px solid #fcd549;
+  border: 1px solid var(--yellow);
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
   text-align: center;
   background-color: #0d1036;
-  color: #fcd549;
+  color: var(--yellow);
 }
 
 .expandContainer {

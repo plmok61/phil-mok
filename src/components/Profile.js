@@ -52,7 +52,6 @@ function Profile() {
           LinkedIn
         </a>
       </div>
-
     </div>
   );
 }
