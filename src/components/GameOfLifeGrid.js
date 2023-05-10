@@ -1,41 +1,41 @@
 import React, { useEffect, useRef, useState } from 'react';
-import GameOfLife from '../gol/game-of-life';
-import initialGrid from '../gol/initialGrid.json';
-
-const gridSize = 100;
-
-const GOL = new GameOfLife({ gridSize });
-
-function getXY({ clientX, clientY }) {
-  const x = Math.round(clientX / Math.ceil(window.innerWidth / gridSize));
-  const y = Math.round(clientY / Math.ceil(window.innerHeight / gridSize));
-  return { x, y };
-}
+import GOL from '../gol/game-of-life';
+// import initialGrid from '../gol/initialGrid.json';
+import patterns from '../gol/patterns';
+import { gridSize } from '../config';
+import PatternEditor from './PatternEditor';
 
 function GameOfLifeGrid() {
   const canvasRef = useRef(null);
+  const mouseCanvasRef = useRef(null);
+  const mouseDivRef = useRef(null);
   const [gameOver, setGameOver] = useState(false);
-  const [paused, setPaused] = useState(false);
+  const [paused, setPaused] = useState(true);
+  const [pattern, setPattern] = useState('pulsar');
+  const [displayEditor, setDisplayEditor] = useState(false);
+  // const cellSize = useMemo(() => window.innerWidth / gridSize, []);
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    const canvasClick = (event) => {
-      const { x, y } = getXY(event);
-      GOL.editGrid(x, y);
-    };
+    const mouseCanvas = mouseCanvasRef.current;
+    const mouseDiv = mouseDivRef.current;
 
     const canvasHover = (event) => {
-      const { x, y } = getXY(event);
-      GOL.trackMouse(x, y);
+      GOL.trackMouseHover(event);
+    };
+    const resizeHandler = () => {
+      GOL.resizeGrid();
     };
 
-    if (canvas) {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+    console.log(canvas, mouseCanvas, mouseDiv);
+    if (canvas && mouseCanvas && mouseDiv) {
+      const cellSize = window.innerWidth / gridSize;
+      canvas.width = cellSize * GOL.gridSize;
+      canvas.height = cellSize * GOL.gridSize;
 
-      GOL.initGrid(canvas, initialGrid);
+      GOL.initGrid(canvas, mouseCanvas, mouseDiv);
       setTimeout(() => {
-        GOL.startGame();
+        // GOL.startGame();
       }, 1000);
 
       const setGOTrue = () => setGameOver(true);
@@ -44,17 +44,38 @@ function GameOfLifeGrid() {
       GOL.on('gameOver', setGOTrue);
       GOL.on('pause', setPausePlay);
 
-      canvas.addEventListener('click', canvasClick);
       canvas.addEventListener('mousemove', canvasHover);
+      window.addEventListener('resize', resizeHandler);
     }
     return () => {
       GOL.removeAllListeners();
       if (canvas) {
-        canvas.removeEventListener('click', canvasClick);
         canvas.removeEventListener('mousemove', canvasHover);
+        window.removeEventListener('resize', resizeHandler);
       }
     };
   }, []);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const canvasClick = (event) => {
+      const { x, y } = GOL.getXY(event);
+      if (pattern !== 'singleCell') {
+        GOL.addPattern(x, y);
+      } else {
+        GOL.editGrid(x, y);
+      }
+    };
+
+    if (canvas) {
+      canvas.addEventListener('click', canvasClick);
+    }
+    return () => {
+      if (canvas) {
+        canvas.removeEventListener('click', canvasClick);
+      }
+    };
+  }, [pattern]);
 
   useEffect(() => {
     if (gameOver) {
@@ -68,50 +89,78 @@ function GameOfLifeGrid() {
       <canvas ref={canvasRef}>
         <p>fallback</p>
       </canvas>
-      <button
-        className="gameButton randomButton"
-        type="button"
-        onClick={() => {
-          GOL.initGrid(canvasRef.current);
-          GOL.startGame();
-        }}
+      <div
+        className="mouseCanvas"
+        ref={mouseDivRef}
       >
-        Random Game
-      </button>
-      <button
-        className="gameButton resetButton"
-        type="button"
-        onClick={() => {
-          GOL.initGrid(canvasRef.current, initialGrid);
-          GOL.startGame();
-        }}
-      >
-        Reset Game
-      </button>
-      <button
-        className="gameButton pausePlayButton"
-        type="button"
-        onClick={() => {
-          if (paused) {
-            GOL.startGame();
-          } else {
-            GOL.pauseGame();
-          }
-        }}
-      >
-        {paused ? 'Play' : 'Pause'}
-      </button>
+        <canvas ref={mouseCanvasRef} />
+      </div>
+      <div className="control-bar">
 
-      <button
-        className="gameButton clearButton"
-        type="button"
-        onClick={() => {
-          GOL.pauseGame();
-          GOL.clearGame();
-        }}
-      >
-        Clear
-      </button>
+        <button
+          className="gameButton"
+          type="button"
+          onClick={() => {
+            GOL.initGrid(canvasRef.current);
+            GOL.startGame();
+          }}
+        >
+          Random Game
+        </button>
+        <button
+          className="gameButton"
+          type="button"
+          onClick={() => {
+            GOL.initGrid(canvasRef.current);
+            GOL.pauseGame();
+          }}
+        >
+          Reset Game
+        </button>
+        <button
+          className="gameButton"
+          type="button"
+          onClick={() => {
+            if (paused) {
+              GOL.startGame();
+            } else {
+              GOL.pauseGame();
+            }
+          }}
+        >
+          {paused ? 'Play' : 'Pause'}
+        </button>
+
+        <button
+          className="gameButton"
+          type="button"
+          onClick={() => {
+            GOL.pauseGame();
+            GOL.clearGame();
+          }}
+        >
+          Clear
+        </button>
+        <button
+          className="gameButton"
+          type="button"
+          onClick={() => {
+            setDisplayEditor((prev) => !prev);
+          }}
+        >
+          Editor
+        </button>
+
+      </div>
+      <div>
+        {displayEditor && (
+        <PatternEditor
+          pattern={patterns[pattern]}
+          patternName={pattern}
+          setPattern={setPattern}
+        />
+        )}
+      </div>
     </div>
   );
 }

@@ -1,24 +1,58 @@
+/* eslint-disable no-plusplus */
+/* eslint-disable no-shadow */
+/* eslint-disable no-mixed-operators */
 import { EventEmitter } from 'events';
+import {
+  gameInterval,
+  gridSize as gs,
+  yellow,
+} from '../config';
+import calculateCellSize from '../utils/calculateCellSize';
 
-const red = '#c81837';
-const orange = '#f77524';
-const yellow = '#fcd549';
-const teal = '#39818e';
-const darkPurple = '#0d1036';
+const hsl = {
+  yellow: { h: 46, s: 96, l: 62 },
+  orange: { h: 18, s: 95, l: 53 },
+  red: { h: 345, s: 79, l: 40 },
+  teal: { h: 188, s: 43, l: 40 },
+  darkPurple: { h: 231, s: 58, l: 10 },
+};
 
-const colors = [darkPurple, teal, red, orange, yellow];
-const fade = [34, 21, 8, 3, 1];
-const fadeTotal = fade.reduce((acc, num) => {
+const colors = [hsl.darkPurple, hsl.teal, hsl.red, hsl.orange, hsl.yellow];
+const steps = [34, 21, 8, 3, 1];
+const fadeTotal = steps.reduce((acc, num) => {
   const result = acc + num;
   return result;
 }, 0);
 
-const colorsFade = [];
-colors.forEach((color, idx) => {
-  for (let i = 0; i < fade[idx]; i += 1) {
+function interpolateColor(startColor, endColor, progress) {
+  const h = startColor.h + (endColor.h - startColor.h) * progress;
+  const s = startColor.s + (endColor.s - startColor.s) * progress;
+  const l = startColor.l + (endColor.l - startColor.l) * progress;
+  const hsl = `hsl(${h}, ${s}%, ${l}%)`;
+  return hsl;
+}
+
+function generateColorsFade(startColor, endColor, steps) {
+  const colorsFade = [];
+
+  for (let i = 0; i < steps; i++) {
+    const progress = i / (steps - 1);
+    const color = interpolateColor(startColor, endColor, progress);
     colorsFade.push(color);
   }
-});
+
+  return colorsFade;
+}
+
+let colorsFade = [];
+
+for (let i = 0; i < colors.length - 1; i++) {
+  const startColor = colors[i];
+  const endColor = colors[i + 1];
+  const stepsCount = steps[i];
+  const fade = generateColorsFade(startColor, endColor, stepsCount);
+  colorsFade = colorsFade.concat(fade);
+}
 
 const aliveIndex = colorsFade.length - 1;
 
@@ -35,6 +69,8 @@ class GameOfLife extends EventEmitter {
   constructor({ gridSize }) {
     super();
     this.canvas = null;
+    this.mouseCanvas = null;
+    this.mouseDiv = null;
     this.grid = [];
     this.gridSize = gridSize;
     this.totalAlive = 0;
@@ -42,6 +78,10 @@ class GameOfLife extends EventEmitter {
     this.gameInterval = null;
     this.initialized = false;
     this.mousePosition = [0, 0];
+    this.cellSize = calculateCellSize(gridSize);
+    this.gridWidth = this.cellSize * gridSize;
+    this.gridHeight = this.cellSize * gridSize;
+    this.patternEditor = [];
   }
 
   createGrid(initialGrid) {
@@ -66,37 +106,61 @@ class GameOfLife extends EventEmitter {
     let count = 0;
 
     // left
+    // OOO
+    // XOO
+    // OOO
     if (col > 0) {
       count += this.grid[row][col - 1].isAlive;
     }
 
     // right
+    // OOO
+    // OOX
+    // OOO
     if (col < this.gridSize - 1) {
       count += this.grid[row][col + 1].isAlive;
     }
 
     if (row > 0) {
       // above
+      // OXO
+      // OOO
+      // OOO
       count += this.grid[row - 1][col].isAlive;
       if (col > 0) {
         // above left
+        // XOO
+        // OOO
+        // OOO
         count += this.grid[row - 1][col - 1].isAlive;
       }
       if (col < this.gridSize - 1) {
         // above right
+        // OOX
+        // OOO
+        // OOO
         count += this.grid[row - 1][col + 1].isAlive;
       }
     }
 
     if (row < this.gridSize - 1) {
       // below
+      // OOO
+      // OOO
+      // OXO
       count += this.grid[row + 1][col].isAlive;
       if (col > 0) {
         // below left
+        // OOO
+        // OOO
+        // XOO
         count += this.grid[row + 1][col - 1].isAlive;
       }
       if (col < this.gridSize - 1) {
         // below right
+        // OOO
+        // OOO
+        // OOX
         count += this.grid[row + 1][col + 1].isAlive;
       }
     }
@@ -143,24 +207,28 @@ class GameOfLife extends EventEmitter {
   }
 
   drawCanvas() {
-    const { innerWidth, innerHeight } = window;
-    const cellWidth = Math.ceil(innerWidth / this.gridSize);
-    const cellHeight = Math.ceil(innerHeight / this.gridSize);
     const ctx = this.canvas.getContext('2d');
-    ctx.clearRect(0, 0, innerWidth, innerHeight);
+    ctx.clearRect(0, 0, this.gridWidth, this.gridHeight);
 
     this.grid.forEach((row, y) => {
       row.forEach((cell, x) => {
-        const [mouseX, mouseY] = this.mousePosition;
-        let isHover = false;
-        if (mouseX === x && mouseY === y) {
-          isHover = true;
-        }
-        const color = isHover ? teal : colorsFade[cell.colorIndex];
-        ctx.fillStyle = color;
-        ctx.fillRect(x * cellWidth, y * cellHeight, cellWidth, cellHeight);
+        ctx.fillStyle = colorsFade[cell.colorIndex];
+        ctx.fillRect(
+          x * this.cellSize,
+          y * this.cellSize,
+          this.cellSize,
+          this.cellSize,
+        );
       });
     });
+  }
+
+  setCellAlive(x, y) {
+    this.grid[y][x].isAlive = 1;
+  }
+
+  setCellDead(x, y) {
+    this.grid[y][x].isAlive = 0;
   }
 
   editGrid(x, y) {
@@ -172,34 +240,55 @@ class GameOfLife extends EventEmitter {
     }
   }
 
+  addPattern(x, y) {
+    this.patternEditor.forEach((row, yInd) => {
+      row.forEach((col, xInd) => {
+        const cell = this.grid[y + yInd][x + xInd];
+        cell.isAlive = col;
+        cell.colorIndex = col ? aliveIndex : 0;
+      });
+    });
+    this.drawCanvas();
+  }
+
   newFrame() {
     this.buildNextGrid();
     this.drawCanvas();
   }
 
-  trackMouse(x, y) {
+  trackMouseHover(event) {
+    const { x, y } = this.getXY(event);
     this.mousePosition = [x, y];
-
-    if (!this.gameInterval) {
-      this.drawCanvas();
-      const { innerWidth, innerHeight } = window;
-      const cellWidth = Math.ceil(innerWidth / this.gridSize);
-      const cellHeight = Math.ceil(innerHeight / this.gridSize);
-      const ctx = this.canvas.getContext('2d');
-      ctx.fillStyle = teal;
-      ctx.fillRect(x * cellWidth, y * cellHeight, cellWidth, cellHeight);
-    }
+    this.mouseDiv.style.left = `${x * this.cellSize}px`;
+    this.mouseDiv.style.top = `${y * this.cellSize}px`;
   }
 
-  initGrid(canvas, initialGrid) {
+  initGrid(canvas, mouseCanvas, mouseDiv, initialGrid) {
     if (!canvas) {
       console.error('You must pass a canvas element');
       return;
     }
     this.canvas = canvas;
-    const { innerWidth, innerHeight } = window;
-    this.canvas.width = innerWidth;
-    this.canvas.height = innerHeight;
+    this.canvas.width = this.gridWidth;
+    this.canvas.height = this.gridHeight;
+
+    this.mouseCanvas = mouseCanvas;
+    this.mouseCanvas.width = this.cellSize;
+    this.mouseCanvas.height = this.cellSize;
+    this.mouseDiv = mouseDiv;
+    this.mouseDiv.style.width = `${this.cellSize}px`;
+    this.mouseDiv.style.height = `${this.cellSize}px`;
+
+    const ctx = this.mouseCanvas.getContext('2d');
+    ctx.fillStyle = yellow;
+
+    ctx.fillRect(
+      0,
+      0,
+      this.cellSize,
+      this.cellSize,
+    );
+
     this.turnsTotalSame = 0;
     this.createGrid(initialGrid);
     this.drawCanvas();
@@ -219,7 +308,7 @@ class GameOfLife extends EventEmitter {
 
     this.gameInterval = setInterval(() => {
       this.newFrame();
-    }, 100);
+    }, gameInterval);
 
     this.emit('pause', false);
   }
@@ -246,6 +335,28 @@ class GameOfLife extends EventEmitter {
     this.createGrid(blankGrid);
     this.drawCanvas();
   }
+
+  resizeGrid() {
+    const cellSize = calculateCellSize(this.gridSize);
+    this.cellSize = cellSize;
+    this.gridWidth = this.cellSize * this.gridSize;
+    this.gridHeight = this.cellSize * this.gridSize;
+    this.canvas.width = this.gridWidth;
+    this.canvas.height = this.gridHeight;
+  }
+
+  /**
+   * Gets the x, y coordinates in the game grid of the cursor when the user clicks
+   * @param {*} param0
+   * @returns { x, y }
+   */
+  getXY({ clientX, clientY }) {
+    const x = Math.round(clientX / this.cellSize);
+    const y = Math.round(clientY / this.cellSize);
+    return { x, y };
+  }
 }
 
-export default GameOfLife;
+const GOL = new GameOfLife({ gridSize: gs });
+
+export default GOL;
