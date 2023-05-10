@@ -3,5 +3,9 @@
   "rules": {
     "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
     "max-len": ["error", 120]
+  },
+  "env": {
+    "browser": true,
+    "node": true
   }
 }
