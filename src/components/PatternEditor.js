@@ -7,7 +7,9 @@ import {
 import { rotateMatrix, flipMatrixX, flipMatrixY } from '../utils/matrixModifiers';
 import patterns from '../gol/patterns';
 
-function PatternEditor({ pattern, patternName, setPattern }) {
+function PatternEditor({
+  pattern, patternName, setPattern, setDisplayEditor,
+}) {
   const canvasRef = useRef(null);
   const [edit, setEdit] = useState(pattern);
 
@@ -50,7 +52,6 @@ function PatternEditor({ pattern, patternName, setPattern }) {
           id="pattern-select"
           value={patternName}
           onChange={(event) => {
-            console.log('event.target.value', event.target.value);
             setPattern(event.target.value);
           }}
         >
@@ -89,6 +90,17 @@ function PatternEditor({ pattern, patternName, setPattern }) {
       <div className="patternEditorCanvas">
         <canvas ref={canvasRef} />
       </div>
+      <div>
+        <button
+          className="gameButton patternEditorCloseButton"
+          type="button"
+          onClick={() => {
+            setDisplayEditor(false);
+          }}
+        >
+          Close
+        </button>
+      </div>
     </div>
   );
 }
@@ -97,6 +109,7 @@ PatternEditor.propTypes = {
   pattern: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number)).isRequired,
   patternName: PropTypes.string.isRequired,
   setPattern: PropTypes.func.isRequired,
+  setDisplayEditor: PropTypes.func.isRequired,
 };
 
 export default PatternEditor;

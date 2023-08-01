@@ -207,6 +207,7 @@ class GameOfLife extends EventEmitter {
   }
 
   drawCanvas() {
+    // console.log(JSON.stringify(this.grid));
     const ctx = this.canvas.getContext('2d');
     ctx.clearRect(0, 0, this.gridWidth, this.gridHeight);
 
@@ -243,7 +244,15 @@ class GameOfLife extends EventEmitter {
   addPattern(x, y) {
     this.patternEditor.forEach((row, yInd) => {
       row.forEach((col, xInd) => {
-        const cell = this.grid[y + yInd][x + xInd];
+        const row = this.grid[y + yInd];
+        if (!row) {
+          return;
+        }
+        const cell = row[x + xInd];
+        if (!cell) {
+          return;
+        }
+
         cell.isAlive = col;
         cell.colorIndex = col ? aliveIndex : 0;
       });
@@ -264,7 +273,7 @@ class GameOfLife extends EventEmitter {
   }
 
   initGrid(canvas, mouseCanvas, mouseDiv, initialGrid) {
-    if (!canvas) {
+    if (!canvas || !mouseCanvas || !mouseDiv) {
       console.error('You must pass a canvas element');
       return;
     }

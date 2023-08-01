@@ -1,9 +1,20 @@
-.control-bar {
+.gameCanvasContainer {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.controlBar {
   position: absolute;
-  top: 4px;
+  bottom: 4px;
   display: flex;
   justify-content: center;
   align-items: center;
+  width: 100%;
+}
+
+.controlBarButton {
+  width: 20%;
 }
 
 .mouseCanvas {
@@ -18,7 +29,7 @@
 }
 
 .gameButton {
-  width: 80px;
+  max-width: 80px;
   height: 40px;
   border: 1px solid var(--red);
   background-color: var(--orange);
@@ -112,15 +123,13 @@
   align-items: center;
 }
 
-.ControlBar {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-}
-
 .patternEditorCanvas {
   margin-top: 2rem;
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.patternEditorCloseButton {
+  margin-top: 2rem;
 }

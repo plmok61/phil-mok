@@ -1,8 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import GOL from '../gol/game-of-life';
-// import initialGrid from '../gol/initialGrid.json';
+import initialGrid from '../gol/initialGrid.json';
 import patterns from '../gol/patterns';
-import { gridSize } from '../config';
 import PatternEditor from './PatternEditor';
 
 function GameOfLifeGrid() {
@@ -11,7 +10,7 @@ function GameOfLifeGrid() {
   const mouseDivRef = useRef(null);
   const [gameOver, setGameOver] = useState(false);
   const [paused, setPaused] = useState(true);
-  const [pattern, setPattern] = useState('pulsar');
+  const [pattern, setPattern] = useState('glider');
   const [displayEditor, setDisplayEditor] = useState(false);
   // const cellSize = useMemo(() => window.innerWidth / gridSize, []);
 
@@ -27,13 +26,8 @@ function GameOfLifeGrid() {
       GOL.resizeGrid();
     };
 
-    console.log(canvas, mouseCanvas, mouseDiv);
     if (canvas && mouseCanvas && mouseDiv) {
-      const cellSize = window.innerWidth / gridSize;
-      canvas.width = cellSize * GOL.gridSize;
-      canvas.height = cellSize * GOL.gridSize;
-
-      GOL.initGrid(canvas, mouseCanvas, mouseDiv);
+      GOL.initGrid(canvas, mouseCanvas, mouseDiv, initialGrid);
       setTimeout(() => {
         // GOL.startGame();
       }, 1000);
@@ -86,39 +80,50 @@ function GameOfLifeGrid() {
 
   return (
     <div>
-      <canvas ref={canvasRef}>
-        <p>fallback</p>
-      </canvas>
+      <div className="gameCanvasContainer">
+        <canvas ref={canvasRef}>
+          <p>fallback</p>
+        </canvas>
+      </div>
       <div
         className="mouseCanvas"
         ref={mouseDivRef}
       >
         <canvas ref={mouseCanvasRef} />
       </div>
-      <div className="control-bar">
+      <div className="controlBar">
 
         <button
-          className="gameButton"
+          className="gameButton controlBarButton"
           type="button"
           onClick={() => {
-            GOL.initGrid(canvasRef.current);
+            GOL.initGrid(
+              canvasRef.current,
+              mouseCanvasRef.current,
+              mouseDivRef.current,
+            );
             GOL.startGame();
           }}
         >
           Random Game
         </button>
         <button
-          className="gameButton"
+          className="gameButton controlBarButton"
           type="button"
           onClick={() => {
-            GOL.initGrid(canvasRef.current);
+            GOL.initGrid(
+              canvasRef.current,
+              mouseCanvasRef.current,
+              mouseDivRef.current,
+              initialGrid,
+            );
             GOL.pauseGame();
           }}
         >
           Reset Game
         </button>
         <button
-          className="gameButton"
+          className="gameButton controlBarButton"
           type="button"
           onClick={() => {
             if (paused) {
@@ -132,7 +137,7 @@ function GameOfLifeGrid() {
         </button>
 
         <button
-          className="gameButton"
+          className="gameButton controlBarButton"
           type="button"
           onClick={() => {
             GOL.pauseGame();
@@ -142,7 +147,7 @@ function GameOfLifeGrid() {
           Clear
         </button>
         <button
-          className="gameButton"
+          className="gameButton controlBarButton"
           type="button"
           onClick={() => {
             setDisplayEditor((prev) => !prev);
@@ -158,6 +163,7 @@ function GameOfLifeGrid() {
           pattern={patterns[pattern]}
           patternName={pattern}
           setPattern={setPattern}
+          setDisplayEditor={setDisplayEditor}
         />
         )}
       </div>
