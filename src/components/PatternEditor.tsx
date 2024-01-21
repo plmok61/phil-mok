@@ -1,29 +1,42 @@
-import React, { useRef, useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
+import React, {
+  useRef, useEffect, useState, Dispatch, SetStateAction,
+} from 'react';
 import GOL from '../gol/game-of-life';
-import {
-  darkPurple, red,
-} from '../config';
+import { darkPurple, red } from '../config';
 import { rotateMatrix, flipMatrixX, flipMatrixY } from '../utils/matrixModifiers';
 import patterns from '../gol/patterns';
+import { Pattern } from '../types';
+
+interface Props {
+  pattern: Pattern,
+  patternName: string,
+  setPattern: Dispatch<SetStateAction<string>>,
+  setDisplayEditor: Dispatch<SetStateAction<boolean>>,
+}
 
 function PatternEditor({
   pattern, patternName, setPattern, setDisplayEditor,
-}) {
-  const canvasRef = useRef(null);
+}: Props) {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
   const [edit, setEdit] = useState(pattern);
 
   useEffect(() => {
     GOL.patternEditor = edit;
     const drawCanvas = () => {
       const canvas = canvasRef.current;
+      if (!canvas) {
+        return;
+      }
       const cellSize = 10;
       const canvasWidth = cellSize * edit[0].length;
       const canvasHeight = cellSize * edit.length;
       canvas.width = canvasWidth;
       canvas.height = canvasHeight;
 
-      const ctx = canvasRef.current.getContext('2d');
+      const ctx = canvas.getContext('2d');
+      if (!ctx) {
+        return;
+      }
 
       ctx.clearRect(0, 0, canvasWidth, canvasHeight);
 
@@ -104,12 +117,5 @@ function PatternEditor({
     </div>
   );
 }
-
-PatternEditor.propTypes = {
-  pattern: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number)).isRequired,
-  patternName: PropTypes.string.isRequired,
-  setPattern: PropTypes.func.isRequired,
-  setDisplayEditor: PropTypes.func.isRequired,
-};
 
 export default PatternEditor;

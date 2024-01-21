@@ -1,6 +1,4 @@
 /* eslint-disable no-plusplus */
-/* eslint-disable no-shadow */
-/* eslint-disable no-mixed-operators */
 import { EventEmitter } from 'events';
 import {
   gameInterval,
@@ -8,8 +6,11 @@ import {
   yellow,
 } from '../config';
 import calculateCellSize from '../utils/calculateCellSize';
+import {
+  Cell, Grid, HSLColor, HSLColorsMap, Pattern, Row,
+} from '../types';
 
-const hsl = {
+const hsl: HSLColorsMap = {
   yellow: { h: 46, s: 96, l: 62 },
   orange: { h: 18, s: 95, l: 53 },
   red: { h: 345, s: 79, l: 40 },
@@ -24,19 +25,19 @@ const fadeTotal = steps.reduce((acc, num) => {
   return result;
 }, 0);
 
-function interpolateColor(startColor, endColor, progress) {
+function interpolateColor(startColor: HSLColor, endColor: HSLColor, progress: number) {
   const h = startColor.h + (endColor.h - startColor.h) * progress;
   const s = startColor.s + (endColor.s - startColor.s) * progress;
   const l = startColor.l + (endColor.l - startColor.l) * progress;
-  const hsl = `hsl(${h}, ${s}%, ${l}%)`;
-  return hsl;
+  const hslString = `hsl(${h}, ${s}%, ${l}%)`;
+  return hslString;
 }
 
-function generateColorsFade(startColor, endColor, steps) {
+function generateColorsFade(startColor: HSLColor, endColor: HSLColor, stepsCount: number) {
   const colorsFade = [];
 
-  for (let i = 0; i < steps; i++) {
-    const progress = i / (steps - 1);
+  for (let i = 0; i < stepsCount; i++) {
+    const progress = i / (stepsCount - 1);
     const color = interpolateColor(startColor, endColor, progress);
     colorsFade.push(color);
   }
@@ -44,7 +45,7 @@ function generateColorsFade(startColor, endColor, steps) {
   return colorsFade;
 }
 
-let colorsFade = [];
+let colorsFade: string[] = [];
 
 for (let i = 0; i < colors.length - 1; i++) {
   const startColor = colors[i];
@@ -56,7 +57,7 @@ for (let i = 0; i < colors.length - 1; i++) {
 
 const aliveIndex = colorsFade.length - 1;
 
-function determineIfAlive(cell, numNeighbors) {
+function determineIfAlive(cell: Cell, numNeighbors: number) {
   const aliveWithCorrectNeighbors = cell.isAlive === 1 && (numNeighbors === 2 || numNeighbors === 3);
   const deadWithCorrectNeighbors = cell.isAlive === 0 && numNeighbors === 3;
   if (aliveWithCorrectNeighbors || deadWithCorrectNeighbors) {
@@ -66,7 +67,35 @@ function determineIfAlive(cell, numNeighbors) {
 }
 
 class GameOfLife extends EventEmitter {
-  constructor({ gridSize }) {
+  canvas: HTMLCanvasElement | null;
+
+  mouseCanvas: HTMLCanvasElement | null;
+
+  mouseDiv: HTMLDivElement | null;
+
+  grid: Grid;
+
+  gridSize: number;
+
+  totalAlive: number;
+
+  turnsTotalSame: number;
+
+  gameInterval: ReturnType<typeof setInterval> | null;
+
+  initialized: boolean;
+
+  mousePosition: [number, number];
+
+  cellSize: number;
+
+  gridWidth: number;
+
+  gridHeight: number;
+
+  patternEditor: Pattern;
+
+  constructor({ gridSize }: { gridSize: number }) {
     super();
     this.canvas = null;
     this.mouseCanvas = null;
@@ -84,7 +113,7 @@ class GameOfLife extends EventEmitter {
     this.patternEditor = [];
   }
 
-  createGrid(initialGrid) {
+  createGrid(initialGrid?: Grid) {
     if (initialGrid) {
       this.grid = initialGrid;
     } else {
@@ -92,7 +121,7 @@ class GameOfLife extends EventEmitter {
         this.grid.push([]);
         for (let col = 0; col < this.gridSize; col += 1) {
           const isAlive = Math.random() > 0.5 ? 1 : 0;
-          const cell = {
+          const cell: Cell = {
             isAlive,
             colorIndex: isAlive ? aliveIndex : 0,
           };
@@ -102,7 +131,7 @@ class GameOfLife extends EventEmitter {
     }
   }
 
-  countNeighbors(col, row) {
+  countNeighbors(col: number, row: number) {
     let count = 0;
 
     // left
@@ -168,20 +197,20 @@ class GameOfLife extends EventEmitter {
     return count;
   }
 
-  checkGameOver(totalAlive) {
+  checkGameOver(totalAlive: number) {
     this.turnsTotalSame = this.totalAlive === totalAlive
       ? this.turnsTotalSame + 1
       : 0;
     this.totalAlive = totalAlive;
 
     if (this.turnsTotalSame > fadeTotal) {
-      clearInterval(this.gameInterval);
+      if (this.gameInterval) clearInterval(this.gameInterval);
       this.emit('gameOver');
     }
   }
 
   buildNextGrid() {
-    const newGrid = [];
+    const newGrid: Grid = [];
     let totalAlive = 0;
 
     this.grid.forEach((row, y) => {
@@ -193,7 +222,7 @@ class GameOfLife extends EventEmitter {
         const newIsAlive = determineIfAlive(cell, neightbors);
         const minusOne = colorIndex > 0 ? colorIndex - 1 : 0;
         const newIndex = newIsAlive ? aliveIndex : minusOne;
-        const newCell = {
+        const newCell: Cell = {
           isAlive: newIsAlive,
           colorIndex: newIndex,
         };
@@ -207,8 +236,14 @@ class GameOfLife extends EventEmitter {
   }
 
   drawCanvas() {
+    if (!this.canvas) {
+      return;
+    }
     // console.log(JSON.stringify(this.grid));
     const ctx = this.canvas.getContext('2d');
+    if (!ctx) {
+      return;
+    }
     ctx.clearRect(0, 0, this.gridWidth, this.gridHeight);
 
     this.grid.forEach((row, y) => {
@@ -224,15 +259,15 @@ class GameOfLife extends EventEmitter {
     });
   }
 
-  setCellAlive(x, y) {
+  setCellAlive(x: number, y: number) {
     this.grid[y][x].isAlive = 1;
   }
 
-  setCellDead(x, y) {
+  setCellDead(x: number, y: number) {
     this.grid[y][x].isAlive = 0;
   }
 
-  editGrid(x, y) {
+  editGrid(x: number, y: number) {
     if (this.grid[y] && this.grid[y][x]) {
       const newIsAlive = this.grid[y][x].isAlive ? 0 : 1;
       this.grid[y][x].isAlive = newIsAlive;
@@ -241,14 +276,14 @@ class GameOfLife extends EventEmitter {
     }
   }
 
-  addPattern(x, y) {
+  addPattern(x: number, y: number) {
     this.patternEditor.forEach((row, yInd) => {
       row.forEach((col, xInd) => {
-        const row = this.grid[y + yInd];
-        if (!row) {
+        const r = this.grid[y + yInd];
+        if (!r) {
           return;
         }
-        const cell = row[x + xInd];
+        const cell = r[x + xInd];
         if (!cell) {
           return;
         }
@@ -265,14 +300,22 @@ class GameOfLife extends EventEmitter {
     this.drawCanvas();
   }
 
-  trackMouseHover(event) {
+  trackMouseHover(event: globalThis.MouseEvent) {
+    if (!this.mouseDiv) {
+      return;
+    }
     const { x, y } = this.getXY(event);
     this.mousePosition = [x, y];
     this.mouseDiv.style.left = `${x * this.cellSize}px`;
     this.mouseDiv.style.top = `${y * this.cellSize}px`;
   }
 
-  initGrid(canvas, mouseCanvas, mouseDiv, initialGrid) {
+  initGrid(
+    canvas: HTMLCanvasElement | null,
+    mouseCanvas: HTMLCanvasElement | null,
+    mouseDiv: HTMLDivElement | null,
+    initialGrid?: Grid,
+  ) {
     if (!canvas || !mouseCanvas || !mouseDiv) {
       console.error('You must pass a canvas element');
       return;
@@ -289,6 +332,9 @@ class GameOfLife extends EventEmitter {
     this.mouseDiv.style.height = `${this.cellSize}px`;
 
     const ctx = this.mouseCanvas.getContext('2d');
+    if (!ctx) {
+      return;
+    }
     ctx.fillStyle = yellow;
 
     ctx.fillRect(
@@ -331,11 +377,11 @@ class GameOfLife extends EventEmitter {
   }
 
   clearGame() {
-    const blankGrid = [];
+    const blankGrid: Grid = [];
     const rows = this.grid.length;
     const cols = this.grid[0].length;
     for (let y = 0; y < rows; y += 1) {
-      const row = [];
+      const row: Row = [];
       for (let x = 0; x < cols; x += 1) {
         row.push({ isAlive: 0, colorIndex: 0 });
       }
@@ -346,6 +392,9 @@ class GameOfLife extends EventEmitter {
   }
 
   resizeGrid() {
+    if (!this.canvas) {
+      return;
+    }
     const cellSize = calculateCellSize(this.gridSize);
     this.cellSize = cellSize;
     this.gridWidth = this.cellSize * this.gridSize;
@@ -359,7 +408,7 @@ class GameOfLife extends EventEmitter {
    * @param {*} param0
    * @returns { x, y }
    */
-  getXY({ clientX, clientY }) {
+  getXY({ clientX, clientY }: { clientX: number, clientY: number }) {
     const x = Math.round(clientX / this.cellSize);
     const y = Math.round(clientY / this.cellSize);
     return { x, y };

@@ -1,11 +1,18 @@
 {
-  "extends": ["airbnb", "airbnb/hooks"],
+  "parser": "@typescript-eslint/parser",
+  "extends": ["airbnb", "airbnb-typescript", "airbnb/hooks"],
+  "plugins": [
+    "@typescript-eslint"
+  ],
   "rules": {
-    "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
+    "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx", ".ts", ".tsx"] }],
     "max-len": ["error", 120]
   },
   "env": {
     "browser": true,
     "node": true
+  },
+  "parserOptions": {
+    "project": "./tsconfig.json"
   }
 }

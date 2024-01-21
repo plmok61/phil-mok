@@ -5,6 +5,7 @@ import glider from './glider';
 import gosperGliderGun from './gosperGlideerGun';
 import pulsar from './pulsar';
 import vampire from './vampire';
+import { Pattern } from '../../types';
 
 export default {
   single,
@@ -14,4 +15,4 @@ export default {
   gosperGliderGun,
   pulsar,
   vampire,
-};
+} as Record<string, Pattern>;

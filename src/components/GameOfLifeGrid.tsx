@@ -3,11 +3,12 @@ import GOL from '../gol/game-of-life';
 import initialGrid from '../gol/initialGrid.json';
 import patterns from '../gol/patterns';
 import PatternEditor from './PatternEditor';
+import { Grid } from '../types';
 
 function GameOfLifeGrid() {
-  const canvasRef = useRef(null);
-  const mouseCanvasRef = useRef(null);
-  const mouseDivRef = useRef(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const mouseCanvasRef = useRef<HTMLCanvasElement>(null);
+  const mouseDivRef = useRef<HTMLDivElement>(null);
   const [gameOver, setGameOver] = useState(false);
   const [paused, setPaused] = useState(true);
   const [pattern, setPattern] = useState('glider');
@@ -19,7 +20,7 @@ function GameOfLifeGrid() {
     const mouseCanvas = mouseCanvasRef.current;
     const mouseDiv = mouseDivRef.current;
 
-    const canvasHover = (event) => {
+    const canvasHover = (event: globalThis.MouseEvent) => {
       GOL.trackMouseHover(event);
     };
     const resizeHandler = () => {
@@ -27,13 +28,13 @@ function GameOfLifeGrid() {
     };
 
     if (canvas && mouseCanvas && mouseDiv) {
-      GOL.initGrid(canvas, mouseCanvas, mouseDiv, initialGrid);
+      GOL.initGrid(canvas, mouseCanvas, mouseDiv, initialGrid as Grid);
       setTimeout(() => {
         // GOL.startGame();
       }, 1000);
 
       const setGOTrue = () => setGameOver(true);
-      const setPausePlay = (p) => setPaused(p);
+      const setPausePlay = (p: boolean) => setPaused(p);
 
       GOL.on('gameOver', setGOTrue);
       GOL.on('pause', setPausePlay);
@@ -52,7 +53,7 @@ function GameOfLifeGrid() {
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    const canvasClick = (event) => {
+    const canvasClick = (event: globalThis.MouseEvent) => {
       const { x, y } = GOL.getXY(event);
       if (pattern !== 'singleCell') {
         GOL.addPattern(x, y);
@@ -115,7 +116,7 @@ function GameOfLifeGrid() {
               canvasRef.current,
               mouseCanvasRef.current,
               mouseDivRef.current,
-              initialGrid,
+              initialGrid as Grid,
             );
             GOL.pauseGame();
           }}
@@ -159,12 +160,12 @@ function GameOfLifeGrid() {
       </div>
       <div>
         {displayEditor && (
-        <PatternEditor
-          pattern={patterns[pattern]}
-          patternName={pattern}
-          setPattern={setPattern}
-          setDisplayEditor={setDisplayEditor}
-        />
+          <PatternEditor
+            pattern={patterns[pattern]}
+            patternName={pattern}
+            setPattern={setPattern}
+            setDisplayEditor={setDisplayEditor}
+          />
         )}
       </div>
     </div>
