@@ -5,7 +5,7 @@
 }
 
 .controlBar {
-  position: absolute;
+  position: fixed;
   bottom: 4px;
   display: flex;
   justify-content: center;
