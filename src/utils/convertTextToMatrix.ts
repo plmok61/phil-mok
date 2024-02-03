@@ -1,4 +1,6 @@
-function convertTextToMatrix(text) {
+import { Pattern } from '../types';
+
+function convertTextToMatrix(text: string): Pattern {
   return text.split('\n')
     .map((r) => r.trim())
     .filter((r) => r !== '')

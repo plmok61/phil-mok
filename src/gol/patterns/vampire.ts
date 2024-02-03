@@ -1,4 +1,6 @@
-const vampire = [
+import { Pattern } from '../../types';
+
+const vampire: Pattern = [
   [0, 0, 1, 1, 1, 0, 0],
   [0, 0, 1, 0, 1, 0, 0],
   [0, 0, 1, 0, 1, 0, 0],

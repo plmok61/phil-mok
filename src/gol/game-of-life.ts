@@ -1,15 +1,16 @@
 /* eslint-disable no-plusplus */
-/* eslint-disable no-shadow */
-/* eslint-disable no-mixed-operators */
 import { EventEmitter } from 'events';
 import {
   gameInterval,
   gridSize as gs,
   yellow,
 } from '../config';
-import calculateCellSize from '../utils/calculateCellSize';
+// import calculateCellSize from '../utils/calculateCellSize';
+import {
+  Cell, Grid, HSLColor, HSLColorsMap, PatterNames, Pattern, Row,
+} from '../types';
 
-const hsl = {
+const hsl: HSLColorsMap = {
   yellow: { h: 46, s: 96, l: 62 },
   orange: { h: 18, s: 95, l: 53 },
   red: { h: 345, s: 79, l: 40 },
@@ -24,19 +25,19 @@ const fadeTotal = steps.reduce((acc, num) => {
   return result;
 }, 0);
 
-function interpolateColor(startColor, endColor, progress) {
+function interpolateColor(startColor: HSLColor, endColor: HSLColor, progress: number) {
   const h = startColor.h + (endColor.h - startColor.h) * progress;
   const s = startColor.s + (endColor.s - startColor.s) * progress;
   const l = startColor.l + (endColor.l - startColor.l) * progress;
-  const hsl = `hsl(${h}, ${s}%, ${l}%)`;
-  return hsl;
+  const hslString = `hsl(${h}, ${s}%, ${l}%)`;
+  return hslString;
 }
 
-function generateColorsFade(startColor, endColor, steps) {
+function generateColorsFade(startColor: HSLColor, endColor: HSLColor, stepsCount: number) {
   const colorsFade = [];
 
-  for (let i = 0; i < steps; i++) {
-    const progress = i / (steps - 1);
+  for (let i = 0; i < stepsCount; i++) {
+    const progress = i / (stepsCount - 1);
     const color = interpolateColor(startColor, endColor, progress);
     colorsFade.push(color);
   }
@@ -44,7 +45,7 @@ function generateColorsFade(startColor, endColor, steps) {
   return colorsFade;
 }
 
-let colorsFade = [];
+let colorsFade: string[] = [];
 
 for (let i = 0; i < colors.length - 1; i++) {
   const startColor = colors[i];
@@ -56,7 +57,7 @@ for (let i = 0; i < colors.length - 1; i++) {
 
 const aliveIndex = colorsFade.length - 1;
 
-function determineIfAlive(cell, numNeighbors) {
+function determineIfAlive(cell: Cell, numNeighbors: number) {
   const aliveWithCorrectNeighbors = cell.isAlive === 1 && (numNeighbors === 2 || numNeighbors === 3);
   const deadWithCorrectNeighbors = cell.isAlive === 0 && numNeighbors === 3;
   if (aliveWithCorrectNeighbors || deadWithCorrectNeighbors) {
@@ -65,8 +66,40 @@ function determineIfAlive(cell, numNeighbors) {
   return 0;
 }
 
+function determineIfImmortal(x: number, y: number, gridSize: number) {
+  return x === 0 || x === gridSize - 1 || y === 0 || y === gridSize - 1;
+}
+
 class GameOfLife extends EventEmitter {
-  constructor({ gridSize }) {
+  canvas: HTMLCanvasElement | null;
+
+  mouseCanvas: HTMLCanvasElement | null;
+
+  mouseDiv: HTMLDivElement | null;
+
+  grid: Grid;
+
+  gridSize: number;
+
+  totalAlive: number;
+
+  turnsTotalSame: number;
+
+  gameInterval: ReturnType<typeof setInterval> | null;
+
+  initialized: boolean;
+
+  mousePosition: [number, number];
+
+  cellSize: number;
+
+  gridWidth: number;
+
+  gridHeight: number;
+
+  patternEditor: Pattern;
+
+  constructor({ gridSize }: { gridSize: number }) {
     super();
     this.canvas = null;
     this.mouseCanvas = null;
@@ -78,23 +111,40 @@ class GameOfLife extends EventEmitter {
     this.gameInterval = null;
     this.initialized = false;
     this.mousePosition = [0, 0];
-    this.cellSize = calculateCellSize(gridSize);
+    // this.cellSize = calculateCellSize(gridSize);
+    this.cellSize = 7;
     this.gridWidth = this.cellSize * gridSize;
     this.gridHeight = this.cellSize * gridSize;
     this.patternEditor = [];
   }
 
-  createGrid(initialGrid) {
+  createGrid(initialGrid?: Grid) {
     if (initialGrid) {
       this.grid = initialGrid;
+      // make edges immortal
+      for (let row = 0; row < this.gridSize; row += 1) {
+        for (let col = 0; col < this.gridSize; col += 1) {
+          const alreadyImmortal = this.grid[row][col].isImmortal;
+          const isImmortal = determineIfImmortal(col, row, this.gridSize);
+          this.grid[row][col].isImmortal = isImmortal || alreadyImmortal;
+        }
+      }
     } else {
       for (let row = 0; row < this.gridSize; row += 1) {
         this.grid.push([]);
         for (let col = 0; col < this.gridSize; col += 1) {
           const isAlive = Math.random() > 0.5 ? 1 : 0;
-          const cell = {
+          const isImmortal = determineIfImmortal(col, row, this.gridSize);
+          let colorIndex;
+          if (isImmortal) {
+            colorIndex = 0;
+          } else {
+            colorIndex = isAlive ? aliveIndex : 0;
+          }
+          const cell: Cell = {
             isAlive,
-            colorIndex: isAlive ? aliveIndex : 0,
+            colorIndex,
+            isImmortal,
           };
           this.grid[row][col] = cell;
         }
@@ -102,7 +152,7 @@ class GameOfLife extends EventEmitter {
     }
   }
 
-  countNeighbors(col, row) {
+  countNeighbors(col: number, row: number) {
     let count = 0;
 
     // left
@@ -168,34 +218,43 @@ class GameOfLife extends EventEmitter {
     return count;
   }
 
-  checkGameOver(totalAlive) {
+  checkGameOver(totalAlive: number) {
     this.turnsTotalSame = this.totalAlive === totalAlive
       ? this.turnsTotalSame + 1
       : 0;
     this.totalAlive = totalAlive;
 
     if (this.turnsTotalSame > fadeTotal) {
-      clearInterval(this.gameInterval);
+      if (this.gameInterval) clearInterval(this.gameInterval);
       this.emit('gameOver');
     }
   }
 
   buildNextGrid() {
-    const newGrid = [];
+    const newGrid: Grid = [];
     let totalAlive = 0;
 
     this.grid.forEach((row, y) => {
       newGrid.push([]);
       row.forEach((cell, x) => {
+        if (cell.isImmortal) {
+          newGrid[y].push({
+            isAlive: Math.random() > 0.5 ? 1 : 0,
+            colorIndex: 0,
+            isImmortal: true,
+          });
+          return;
+        }
         const { isAlive, colorIndex } = cell;
         totalAlive += isAlive;
         const neightbors = this.countNeighbors(x, y);
         const newIsAlive = determineIfAlive(cell, neightbors);
         const minusOne = colorIndex > 0 ? colorIndex - 1 : 0;
         const newIndex = newIsAlive ? aliveIndex : minusOne;
-        const newCell = {
+        const newCell: Cell = {
           isAlive: newIsAlive,
           colorIndex: newIndex,
+          isImmortal: false,
         };
         newGrid[y].push(newCell);
       });
@@ -207,8 +266,15 @@ class GameOfLife extends EventEmitter {
   }
 
   drawCanvas() {
+    if (!this.canvas) {
+      return;
+    }
+    console.log(JSON.stringify(this.grid));
     // console.log(JSON.stringify(this.grid));
     const ctx = this.canvas.getContext('2d');
+    if (!ctx) {
+      return;
+    }
     ctx.clearRect(0, 0, this.gridWidth, this.gridHeight);
 
     this.grid.forEach((row, y) => {
@@ -224,15 +290,15 @@ class GameOfLife extends EventEmitter {
     });
   }
 
-  setCellAlive(x, y) {
+  setCellAlive(x: number, y: number) {
     this.grid[y][x].isAlive = 1;
   }
 
-  setCellDead(x, y) {
+  setCellDead(x: number, y: number) {
     this.grid[y][x].isAlive = 0;
   }
 
-  editGrid(x, y) {
+  editGrid(x: number, y: number) {
     if (this.grid[y] && this.grid[y][x]) {
       const newIsAlive = this.grid[y][x].isAlive ? 0 : 1;
       this.grid[y][x].isAlive = newIsAlive;
@@ -241,20 +307,21 @@ class GameOfLife extends EventEmitter {
     }
   }
 
-  addPattern(x, y) {
+  addPattern(x: number, y: number, pattern: PatterNames) {
     this.patternEditor.forEach((row, yInd) => {
       row.forEach((col, xInd) => {
-        const row = this.grid[y + yInd];
-        if (!row) {
+        const r = this.grid[y + yInd];
+        if (!r) {
           return;
         }
-        const cell = row[x + xInd];
+        const cell = r[x + xInd];
         if (!cell) {
           return;
         }
 
         cell.isAlive = col;
         cell.colorIndex = col ? aliveIndex : 0;
+        cell.isImmortal = pattern === 'quad';
       });
     });
     this.drawCanvas();
@@ -265,14 +332,22 @@ class GameOfLife extends EventEmitter {
     this.drawCanvas();
   }
 
-  trackMouseHover(event) {
-    const { x, y } = this.getXY(event);
+  trackMouseHover(event: globalThis.MouseEvent) {
+    if (!this.mouseDiv) {
+      return;
+    }
+    const { x, y } = this.getXY(event.clientX, event.clientY);
     this.mousePosition = [x, y];
     this.mouseDiv.style.left = `${x * this.cellSize}px`;
     this.mouseDiv.style.top = `${y * this.cellSize}px`;
   }
 
-  initGrid(canvas, mouseCanvas, mouseDiv, initialGrid) {
+  initGrid(
+    canvas: HTMLCanvasElement | null,
+    mouseCanvas: HTMLCanvasElement | null,
+    mouseDiv: HTMLDivElement | null,
+    initialGrid?: Grid,
+  ) {
     if (!canvas || !mouseCanvas || !mouseDiv) {
       console.error('You must pass a canvas element');
       return;
@@ -289,6 +364,9 @@ class GameOfLife extends EventEmitter {
     this.mouseDiv.style.height = `${this.cellSize}px`;
 
     const ctx = this.mouseCanvas.getContext('2d');
+    if (!ctx) {
+      return;
+    }
     ctx.fillStyle = yellow;
 
     ctx.fillRect(
@@ -331,13 +409,13 @@ class GameOfLife extends EventEmitter {
   }
 
   clearGame() {
-    const blankGrid = [];
+    const blankGrid: Grid = [];
     const rows = this.grid.length;
     const cols = this.grid[0].length;
     for (let y = 0; y < rows; y += 1) {
-      const row = [];
+      const row: Row = [];
       for (let x = 0; x < cols; x += 1) {
-        row.push({ isAlive: 0, colorIndex: 0 });
+        row.push({ isAlive: 0, colorIndex: 0, isImmortal: false });
       }
       blankGrid.push(row);
     }
@@ -346,8 +424,11 @@ class GameOfLife extends EventEmitter {
   }
 
   resizeGrid() {
-    const cellSize = calculateCellSize(this.gridSize);
-    this.cellSize = cellSize;
+    if (!this.canvas) {
+      return;
+    }
+    // const cellSize = calculateCellSize(this.gridSize);
+    // this.cellSize = cellSize;
     this.gridWidth = this.cellSize * this.gridSize;
     this.gridHeight = this.cellSize * this.gridSize;
     this.canvas.width = this.gridWidth;
@@ -359,9 +440,9 @@ class GameOfLife extends EventEmitter {
    * @param {*} param0
    * @returns { x, y }
    */
-  getXY({ clientX, clientY }) {
-    const x = Math.round(clientX / this.cellSize);
-    const y = Math.round(clientY / this.cellSize);
+  getXY(elementX: number, elementY: number) {
+    const x = Math.round(elementX / this.cellSize);
+    const y = Math.round(elementY / this.cellSize);
     return { x, y };
   }
 }

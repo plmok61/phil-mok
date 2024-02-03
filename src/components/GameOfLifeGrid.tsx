@@ -3,23 +3,23 @@ import GOL from '../gol/game-of-life';
 import initialGrid from '../gol/initialGrid.json';
 import patterns from '../gol/patterns';
 import PatternEditor from './PatternEditor';
+import { Grid, PatterNames } from '../types';
 
 function GameOfLifeGrid() {
-  const canvasRef = useRef(null);
-  const mouseCanvasRef = useRef(null);
-  const mouseDivRef = useRef(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const mouseCanvasRef = useRef<HTMLCanvasElement>(null);
+  const mouseDivRef = useRef<HTMLDivElement>(null);
   const [gameOver, setGameOver] = useState(false);
   const [paused, setPaused] = useState(true);
-  const [pattern, setPattern] = useState('glider');
+  const [pattern, setPattern] = useState<PatterNames>('quad');
   const [displayEditor, setDisplayEditor] = useState(false);
-  // const cellSize = useMemo(() => window.innerWidth / gridSize, []);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     const mouseCanvas = mouseCanvasRef.current;
     const mouseDiv = mouseDivRef.current;
 
-    const canvasHover = (event) => {
+    const canvasHover = (event: globalThis.MouseEvent) => {
       GOL.trackMouseHover(event);
     };
     const resizeHandler = () => {
@@ -27,13 +27,13 @@ function GameOfLifeGrid() {
     };
 
     if (canvas && mouseCanvas && mouseDiv) {
-      GOL.initGrid(canvas, mouseCanvas, mouseDiv, initialGrid);
+      GOL.initGrid(canvas, mouseCanvas, mouseDiv, initialGrid as Grid);
       setTimeout(() => {
         // GOL.startGame();
       }, 1000);
 
       const setGOTrue = () => setGameOver(true);
-      const setPausePlay = (p) => setPaused(p);
+      const setPausePlay = (p: boolean) => setPaused(p);
 
       GOL.on('gameOver', setGOTrue);
       GOL.on('pause', setPausePlay);
@@ -51,14 +51,15 @@ function GameOfLifeGrid() {
   }, []);
 
   useEffect(() => {
+    GOL.patternEditor = patterns[pattern];
     const canvas = canvasRef.current;
-    const canvasClick = (event) => {
-      const { x, y } = GOL.getXY(event);
-      if (pattern !== 'singleCell') {
-        GOL.addPattern(x, y);
-      } else {
-        GOL.editGrid(x, y);
-      }
+    const canvasClick = (event: MouseEvent) => {
+      const target = event.target as HTMLCanvasElement;
+      const rect = target.getBoundingClientRect();
+      const elX = event.clientX - rect.left;
+      const elY = event.clientY - rect.top;
+      const { x, y } = GOL.getXY(elX, elY);
+      GOL.addPattern(x, y, pattern);
     };
 
     if (canvas) {
@@ -79,7 +80,7 @@ function GameOfLifeGrid() {
   }, [gameOver]);
 
   return (
-    <div>
+    <div className="container">
       <div className="gameCanvasContainer">
         <canvas ref={canvasRef}>
           <p>fallback</p>
@@ -92,7 +93,24 @@ function GameOfLifeGrid() {
         <canvas ref={mouseCanvasRef} />
       </div>
       <div className="controlBar">
-
+        <button
+          className="gameButton controlBarButton"
+          type="button"
+          onClick={() => {
+            setPattern('quad');
+          }}
+        >
+          quad
+        </button>
+        <button
+          className="gameButton controlBarButton"
+          type="button"
+          onClick={() => {
+            setPattern('deadSingle');
+          }}
+        >
+          dead
+        </button>
         <button
           className="gameButton controlBarButton"
           type="button"
@@ -115,7 +133,7 @@ function GameOfLifeGrid() {
               canvasRef.current,
               mouseCanvasRef.current,
               mouseDivRef.current,
-              initialGrid,
+              initialGrid as Grid,
             );
             GOL.pauseGame();
           }}
@@ -159,12 +177,12 @@ function GameOfLifeGrid() {
       </div>
       <div>
         {displayEditor && (
-        <PatternEditor
-          pattern={patterns[pattern]}
-          patternName={pattern}
-          setPattern={setPattern}
-          setDisplayEditor={setDisplayEditor}
-        />
+          <PatternEditor
+            pattern={patterns[pattern]}
+            patternName={pattern}
+            setPattern={setPattern}
+            setDisplayEditor={setDisplayEditor}
+          />
         )}
       </div>
     </div>
