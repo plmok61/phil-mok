@@ -4,8 +4,10 @@ import fireship from './fireship';
 import glider from './glider';
 import gosperGliderGun from './gosperGlideerGun';
 import pulsar from './pulsar';
+import quasar from './quasar';
 import vampire from './vampire';
-import { Pattern } from '../../types';
+import quad from './quad';
+import deadSingle from './deadSingle';
 
 export default {
   single,
@@ -14,5 +16,9 @@ export default {
   glider,
   gosperGliderGun,
   pulsar,
+  quasar,
   vampire,
-} as Record<string, Pattern>;
+  quad,
+
+  deadSingle,
+};

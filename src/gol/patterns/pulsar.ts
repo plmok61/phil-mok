@@ -1,4 +1,6 @@
-const pulsar = [
+import { Pattern } from '../../types';
+
+const pulsar: Pattern = [
   [0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0],
   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
   [1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1],

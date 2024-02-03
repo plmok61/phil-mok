@@ -5,12 +5,12 @@ import GOL from '../gol/game-of-life';
 import { darkPurple, red } from '../config';
 import { rotateMatrix, flipMatrixX, flipMatrixY } from '../utils/matrixModifiers';
 import patterns from '../gol/patterns';
-import { Pattern } from '../types';
+import { PatterNames, Pattern } from '../types';
 
 interface Props {
   pattern: Pattern,
   patternName: string,
-  setPattern: Dispatch<SetStateAction<string>>,
+  setPattern: Dispatch<SetStateAction<PatterNames>>,
   setDisplayEditor: Dispatch<SetStateAction<boolean>>,
 }
 
@@ -65,7 +65,7 @@ function PatternEditor({
           id="pattern-select"
           value={patternName}
           onChange={(event) => {
-            setPattern(event.target.value);
+            setPattern(event.target.value as PatterNames);
           }}
         >
           {Object.keys(patterns).map((s) => (
