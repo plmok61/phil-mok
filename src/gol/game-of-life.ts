@@ -4,8 +4,9 @@ import {
   gameInterval,
   gridSize as gs,
   yellow,
+  baseSize,
 } from '../config';
-// import calculateCellSize from '../utils/calculateCellSize';
+import calculateCellSize from '../utils/calculateCellSize';
 import {
   Cell, Grid, HSLColor, HSLColorsMap, PatterNames, Pattern, Row,
 } from '../types';
@@ -111,8 +112,7 @@ class GameOfLife extends EventEmitter {
     this.gameInterval = null;
     this.initialized = false;
     this.mousePosition = [0, 0];
-    // this.cellSize = calculateCellSize(gridSize);
-    this.cellSize = 7;
+    this.cellSize = calculateCellSize(gridSize, baseSize);
     this.gridWidth = this.cellSize * gridSize;
     this.gridHeight = this.cellSize * gridSize;
     this.patternEditor = [];
@@ -269,7 +269,6 @@ class GameOfLife extends EventEmitter {
     if (!this.canvas) {
       return;
     }
-    console.log(JSON.stringify(this.grid));
     // console.log(JSON.stringify(this.grid));
     const ctx = this.canvas.getContext('2d');
     if (!ctx) {
@@ -427,8 +426,7 @@ class GameOfLife extends EventEmitter {
     if (!this.canvas) {
       return;
     }
-    // const cellSize = calculateCellSize(this.gridSize);
-    // this.cellSize = cellSize;
+    this.cellSize = calculateCellSize(this.gridSize, baseSize);
     this.gridWidth = this.cellSize * this.gridSize;
     this.gridHeight = this.cellSize * this.gridSize;
     this.canvas.width = this.gridWidth;
