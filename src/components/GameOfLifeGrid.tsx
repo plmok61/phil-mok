@@ -82,9 +82,22 @@ function GameOfLifeGrid() {
   return (
     <div className="container">
       <div className="gameCanvasContainer">
-        <canvas ref={canvasRef}>
+        <canvas
+          ref={canvasRef}
+        // style={{ zIndex: 1, opacity: 0.5 }}
+        >
           <p>fallback</p>
         </canvas>
+        {/* <img
+          src={Dragon}
+          alt="Logo"
+          style={{
+            position: 'absolute',
+            zIndex: 0,
+            width: '500px',
+            height: '500px',
+          }}
+        /> */}
       </div>
       <div
         className="mouseCanvas"

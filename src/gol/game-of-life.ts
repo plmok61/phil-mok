@@ -15,11 +15,12 @@ const hsl: HSLColorsMap = {
   yellow: { h: 46, s: 96, l: 62 },
   orange: { h: 18, s: 95, l: 53 },
   red: { h: 345, s: 79, l: 40 },
-  teal: { h: 188, s: 43, l: 40 },
-  darkPurple: { h: 231, s: 58, l: 10 },
+  // teal: { h: 188, s: 43, l: 40 },
+  // darkPurple: { h: 231, s: 58, l: 10 },
 };
 
-const colors = [hsl.darkPurple, hsl.teal, hsl.red, hsl.orange, hsl.yellow];
+// const colors = [hsl.darkPurple, hsl.teal, hsl.red, hsl.orange, hsl.yellow];
+const colors = [hsl.red, hsl.orange, hsl.yellow];
 const steps = [34, 21, 8, 3, 1];
 const fadeTotal = steps.reduce((acc, num) => {
   const result = acc + num;
@@ -287,6 +288,7 @@ class GameOfLife extends EventEmitter {
         );
       });
     });
+    console.log(JSON.stringify(this.grid));
   }
 
   setCellAlive(x: number, y: number) {
