@@ -12,16 +12,21 @@ import {
 } from '../types';
 
 const hsl: HSLColorsMap = {
-  yellow: { h: 46, s: 96, l: 62 },
-  orange: { h: 18, s: 95, l: 53 },
-  red: { h: 345, s: 79, l: 40 },
+  red: { h: 0, s: 100, l: 33 },
+  gold: { h: 42, s: 36, l: 53 },
+  // white: { h: 0, s: 0, l: 100 },
+  black: { h: 0, s: 0, l: 0 },
+  // red: { h: 345, s: 79, l: 40 },
+  // orange: { h: 18, s: 95, l: 53 },
+  // yellow: { h: 46, s: 96, l: 62 },
   // teal: { h: 188, s: 43, l: 40 },
   // darkPurple: { h: 231, s: 58, l: 10 },
 };
 
 // const colors = [hsl.darkPurple, hsl.teal, hsl.red, hsl.orange, hsl.yellow];
-const colors = [hsl.red, hsl.orange, hsl.yellow];
-const steps = [34, 21, 8, 3, 1];
+// const steps = [34, 21, 13, 8, 5];
+const colors = [hsl.black, hsl.gold, hsl.red];
+const steps = [21, 34, 55];
 const fadeTotal = steps.reduce((acc, num) => {
   const result = acc + num;
   return result;
@@ -128,6 +133,7 @@ class GameOfLife extends EventEmitter {
           const alreadyImmortal = this.grid[row][col].isImmortal;
           const isImmortal = determineIfImmortal(col, row, this.gridSize);
           this.grid[row][col].isImmortal = isImmortal || alreadyImmortal;
+          this.grid[row][col].colorIndex = alreadyImmortal ? aliveIndex : this.grid[row][col].colorIndex;
         }
       }
     } else {
