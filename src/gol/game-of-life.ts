@@ -276,7 +276,6 @@ class GameOfLife extends EventEmitter {
     if (!this.canvas) {
       return;
     }
-    // console.log(JSON.stringify(this.grid));
     const ctx = this.canvas.getContext('2d');
     if (!ctx) {
       return;
@@ -294,7 +293,6 @@ class GameOfLife extends EventEmitter {
         );
       });
     });
-    console.log(JSON.stringify(this.grid));
   }
 
   setCellAlive(x: number, y: number) {

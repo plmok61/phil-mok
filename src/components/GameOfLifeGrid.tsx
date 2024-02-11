@@ -29,7 +29,7 @@ function GameOfLifeGrid() {
     if (canvas && mouseCanvas && mouseDiv) {
       GOL.initGrid(canvas, mouseCanvas, mouseDiv, initialGrid as Grid);
       setTimeout(() => {
-        // GOL.startGame();
+        GOL.startGame();
       }, 1000);
 
       const setGOTrue = () => setGameOver(true);
