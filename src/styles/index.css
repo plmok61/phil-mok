@@ -6,7 +6,12 @@
   --darkPurple: #0d1036;
 }
 
-html, body, #root, .App, button, option {
+html,
+body,
+#root,
+.App,
+button,
+option {
   height: 100%;
   background-color: #0d1036;
   font-family: 'Audiowide', cursive;

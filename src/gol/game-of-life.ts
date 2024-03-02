@@ -41,7 +41,7 @@ function interpolateColor(startColor: HSLColor, endColor: HSLColor, progress: nu
 }
 
 function generateColorsFade(startColor: HSLColor, endColor: HSLColor, stepsCount: number) {
-  const colorsFade = [];
+  const colorsFade: string[] = [];
 
   for (let i = 0; i < stepsCount; i++) {
     const progress = i / (stepsCount - 1);

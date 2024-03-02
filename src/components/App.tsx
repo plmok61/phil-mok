@@ -1,5 +1,8 @@
+'use client';
+
 import React from 'react';
-import '../App.css';
+import '../styles/index.css';
+import '../styles/App.css';
 import GameOfLifeGrid from './GameOfLifeGrid';
 import Profile from './Profile';
 
