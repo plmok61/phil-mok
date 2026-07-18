@@ -20,3 +20,4 @@ PLAN.md
 # next
 .next
 dist
+tsconfig.tsbuildinfo
