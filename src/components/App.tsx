@@ -3,14 +3,23 @@
 import React from 'react';
 import '../styles/index.css';
 import '../styles/App.css';
+import SiteHeader from './SiteHeader';
 import GameOfLifeGrid from './GameOfLifeGrid';
-import Profile from './Profile';
+import AppLinks from './AppLinks';
 
 function App() {
   return (
     <>
+      <SiteHeader />
       <GameOfLifeGrid />
-      <Profile />
+      <AppLinks />
+      <footer className="siteFooter">
+        ©
+        {' '}
+        {new Date().getFullYear()}
+        {' '}
+        Phil Mok
+      </footer>
     </>
   );
 }

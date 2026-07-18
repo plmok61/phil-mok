@@ -1,17 +1,33 @@
 import React from 'react';
+import type { Metadata, Viewport } from 'next';
+import { Orbitron, JetBrains_Mono } from 'next/font/google';
+
+const orbitron = Orbitron({
+  subsets: ['latin'],
+  weight: ['500', '700'],
+  variable: '--font-display',
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ['latin'],
+  weight: ['400', '700'],
+  variable: '--font-mono',
+});
+
+export const metadata: Metadata = {
+  title: 'Phil Mok',
+  description: "Phil Mok — software engineer. Conway's Game of Life, apps, and more.",
+};
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+};
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico" />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
-        <link href="https://fonts.googleapis.com/css2?family=Audiowide&display=swap" rel="stylesheet" />
-        <title>Phil Mok</title>
-      </head>
-      <body>
+      <body className={`${orbitron.variable} ${jetbrainsMono.variable}`}>
         <div id="root">{children}</div>
       </body>
     </html>

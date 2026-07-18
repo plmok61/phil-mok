@@ -1,27 +1,59 @@
+/* ---------- Header ---------- */
+
+.siteHeader {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 16px;
+  height: 48px;
+  background-color: rgba(5, 10, 7, 0.9);
+  border-bottom: 1px solid var(--green-dim);
+  backdrop-filter: blur(4px);
+}
+
+.siteTitle {
+  margin: 0;
+  font-size: 1rem;
+  letter-spacing: 0.12em;
+}
+
+.siteTitle .cursor {
+  display: inline-block;
+  animation: blink 1.2s step-end infinite;
+  color: var(--green-bright);
+}
+
+.headerLinks {
+  display: flex;
+  gap: 16px;
+}
+
+.headerLinks a {
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+/* ---------- Game section ---------- */
+
 .container {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
+  padding: 16px 0 8px;
 }
 
 .gameCanvasContainer {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  position: relative;
   width: fit-content;
 }
 
-.controlBar {
-  position: absolute;
-  bottom: 4px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-}
-
-.controlBarButton {
-  width: 20%;
+.gameCanvasContainer canvas {
+  display: block;
+  border: 1px solid var(--green-dim);
 }
 
 .mouseCanvas {
@@ -30,113 +62,92 @@
   left: 0;
   z-index: 1;
   pointer-events: none;
+}
+
+.controlBar {
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
   align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 12px 0;
 }
 
 .gameButton {
-  max-width: 80px;
+  min-width: 80px;
   height: 40px;
-  border: 1px solid var(--red);
-  background-color: var(--orange);
-  color: var(--darkPurple);
-  border-radius: 4px;
-  cursor: pointer;
-  margin-left: 4px;
-  margin-top: 4px;
-}
-
-.profilePicContainer {
-  position: absolute;
-  top: 5px;
-  right: 5px;
-  height: 100px;
-  width: 100px;
-  border-radius: 4px;
-  overflow: hidden;
-  transition: all 1s;
-  border: 1px solid var(--yellow);
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-  text-align: center;
-  background-color: #0d1036;
-  color: var(--yellow);
-}
-
-.expandContainer {
-  position: absolute;
-  height: 300px;
-  width: 200px;
-  top: calc(50% - 100px);
-  right: calc(50% - 100px);
-  transition: all 1s;
-}
-
-.imgButton {
-  border: none;
-  margin: 0;
-  padding: 0;
+  padding: 0 12px;
+  border: 1px solid var(--green-dim);
   background-color: transparent;
-  cursor: pointer;
-  height: 100px;
-  width: 100px;
-  overflow: hidden;
-  transition: all 1s;
-}
-
-.imgButton img {
-  height: 100%;
-  width: 100%;
-  object-fit: cover;
-}
-
-.expandButton {
-  height: 200px;
-  width: 200px;
-}
-
-.links {
-  padding: 0px;
-  display: flex;
-  flex-direction: column;
-  height: 0px;
-  justify-content: space-evenly;
-  width: 100%;
-  transition: all 1s;
-  overflow: hidden;
-}
-
-.linksExpand {
-  padding: 8px;
-  height: 100px;
-}
-
-.patternEditor {
-  padding: 3rem;
-  border: 1px solid var(--yellow);
+  color: var(--green);
+  font-family: var(--font-mono), monospace;
+  font-size: 0.85rem;
   border-radius: 4px;
-  background-color: var(--darkPurple);
-  color: var(--yellow);
-  position: absolute;
-  transform: translateY(-50%) translateX(-50%);
-  left: 50%;
-  top: 50%;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s, box-shadow 0.15s;
+}
+
+.gameButton:hover {
+  color: var(--green-bright);
+  border-color: var(--green-bright);
+  box-shadow: 0 0 8px rgba(77, 255, 136, 0.3);
+}
+
+/* ---------- Apps section ---------- */
+
+.appsSection {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 32px 16px 48px;
+}
+
+.appsSection h2 {
+  font-size: 1.1rem;
+  letter-spacing: 0.1em;
+}
+
+.appCards {
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
+  gap: 12px;
 }
 
-.patternEditorCanvas {
-  margin-top: 2rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.appCard {
+  display: block;
+  padding: 16px;
+  border: 1px solid var(--green-dim);
+  border-radius: 4px;
+  background-color: var(--bg-elevated);
+  text-decoration: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
 }
 
-.patternEditorCloseButton {
-  margin-top: 2rem;
+.appCard:hover {
+  border-color: var(--green-bright);
+  box-shadow: 0 0 10px rgba(77, 255, 136, 0.25);
+  text-shadow: none;
+}
+
+.appCardName {
+  color: var(--green-bright);
+  font-family: var(--font-display), var(--font-mono), monospace;
+  font-size: 0.95rem;
+  margin: 0 0 6px;
+}
+
+.appCardDescription {
+  color: var(--text-dim);
+  font-size: 0.85rem;
+  margin: 0;
+}
+
+/* ---------- Footer ---------- */
+
+.siteFooter {
+  text-align: center;
+  padding: 16px;
+  color: var(--text-dim);
+  font-size: 0.75rem;
+  border-top: 1px solid var(--green-dim);
 }
