@@ -3,7 +3,7 @@ import { EventEmitter } from 'events';
 import {
   gameInterval,
   gridSize as gs,
-  yellow,
+  cursorColor,
   baseSize,
 } from '../config';
 import calculateCellSize from '../utils/calculateCellSize';
@@ -11,22 +11,18 @@ import {
   Cell, Grid, HSLColor, HSLColorsMap, PatterNames, Pattern, Row,
 } from '../types';
 
+// Bioluminescence: alive cells flash near-white and
+// decay through aqua -> teal -> deep blue -> dark water.
 const hsl: HSLColorsMap = {
-  red: { h: 0, s: 100, l: 33 },
-  gold: { h: 42, s: 36, l: 53 },
-  // white: { h: 0, s: 0, l: 100 },
-  black: { h: 0, s: 0, l: 0 },
-  // red: { h: 345, s: 79, l: 40 },
-  // orange: { h: 18, s: 95, l: 53 },
-  // yellow: { h: 46, s: 96, l: 62 },
-  // teal: { h: 188, s: 43, l: 40 },
-  // darkPurple: { h: 231, s: 58, l: 10 },
+  bg: { h: 207, s: 72, l: 6 }, // ≈ #04121a deep water
+  deepBlue: { h: 204, s: 62, l: 21 }, // ≈ #145273
+  teal: { h: 187, s: 58, l: 40 }, // ≈ #2b96a1
+  aqua: { h: 168, s: 82, l: 66 }, // ≈ #61efd0
+  white: { h: 168, s: 100, l: 92 },
 };
 
-// const colors = [hsl.darkPurple, hsl.teal, hsl.red, hsl.orange, hsl.yellow];
-// const steps = [34, 21, 13, 8, 5];
-const colors = [hsl.black, hsl.gold, hsl.red];
-const steps = [21, 34, 55];
+const colors = [hsl.bg, hsl.deepBlue, hsl.teal, hsl.aqua, hsl.white];
+const steps = [34, 21, 13, 8]; // one entry per gradient segment (colors.length - 1)
 const fadeTotal = steps.reduce((acc, num) => {
   const result = acc + num;
   return result;
@@ -338,10 +334,13 @@ class GameOfLife extends EventEmitter {
   }
 
   trackMouseHover(event: globalThis.MouseEvent) {
-    if (!this.mouseDiv) {
+    if (!this.mouseDiv || !this.canvas) {
       return;
     }
-    const { x, y } = this.getXY(event.clientX, event.clientY);
+    // Use canvas-relative coordinates so the hover cursor stays
+    // aligned regardless of where the canvas sits in the page flow.
+    const rect = this.canvas.getBoundingClientRect();
+    const { x, y } = this.getXY(event.clientX - rect.left, event.clientY - rect.top);
     this.mousePosition = [x, y];
     this.mouseDiv.style.left = `${x * this.cellSize}px`;
     this.mouseDiv.style.top = `${y * this.cellSize}px`;
@@ -372,7 +371,7 @@ class GameOfLife extends EventEmitter {
     if (!ctx) {
       return;
     }
-    ctx.fillStyle = yellow;
+    ctx.fillStyle = cursorColor;
 
     ctx.fillRect(
       0,

@@ -1,31 +1,92 @@
 :root {
-  --red: #c81837;
-  --orange: #f77524;
-  --yellow: #fcd549;
-  --teal: #39818e;
-  --darkPurple: #0d1036;
+  --abyss: #04101c;
+  --depth: #082031;
+  --glow: #5eead4;
+  --glow-bright: #c9fff4;
+  --haze: #6f96a3;
+  --foam: #d7e8e8;
+  --line: rgba(94, 234, 212, 0.16);
 }
 
 html,
-body,
-#root,
-.App,
-button,
-option {
-  height: 100%;
-  background-color: #0d1036;
-  font-family: 'Audiowide', cursive;
+body {
+  min-height: 100%;
 }
 
 body {
   margin: 0;
   padding: 0;
+  background-color: var(--abyss);
+  background-image:
+    radial-gradient(120% 60% at 50% -10%, rgba(35, 110, 140, 0.28), rgba(35, 110, 140, 0) 60%),
+    radial-gradient(90% 50% at 80% 110%, rgba(10, 45, 70, 0.5), rgba(10, 45, 70, 0) 60%);
+  background-attachment: fixed;
+  color: var(--foam);
+  font-family: var(--font-body), ui-rounded, system-ui, sans-serif;
+  line-height: 1.6;
+  overflow-x: hidden;
 }
 
-a {
-  color: var(--yellow);
+h1,
+h2,
+h3 {
+  font-family: var(--font-display), var(--font-body), sans-serif;
+  color: var(--glow-bright);
 }
 
+a,
 a:visited {
-  color: var(--yellow);
+  color: var(--glow);
+}
+
+a:hover {
+  color: var(--glow-bright);
+  text-shadow: 0 0 10px rgba(94, 234, 212, 0.6);
+}
+
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--glow);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+    text-shadow: 0 0 14px rgba(94, 234, 212, 0.9);
+  }
+
+  50% {
+    opacity: 0.45;
+    text-shadow: none;
+  }
+}
+
+@keyframes drift {
+  from {
+    transform: translate(0, 0);
+  }
+
+  to {
+    transform: translate(-28px, 44px);
+  }
+}
+
+@keyframes breathe {
+  0%,
+  100% {
+    box-shadow:
+      0 0 60px rgba(28, 160, 160, 0.14),
+      0 0 18px rgba(94, 234, 212, 0.10),
+      inset 0 0 60px rgba(2, 8, 14, 0.75);
+  }
+
+  50% {
+    box-shadow:
+      0 0 90px rgba(28, 160, 160, 0.24),
+      0 0 26px rgba(94, 234, 212, 0.18),
+      inset 0 0 60px rgba(2, 8, 14, 0.75);
+  }
 }

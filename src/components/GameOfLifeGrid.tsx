@@ -2,8 +2,9 @@ import React, { useEffect, useRef, useState } from 'react';
 import GOL from '../gol/game-of-life';
 import initialGrid from '../gol/initialGrid.json';
 import patterns from '../gol/patterns';
-import PatternEditor from './PatternEditor';
-import { Grid, PatterNames } from '../types';
+import { Grid } from '../types';
+
+type StampMode = 'quad' | 'deadSingle';
 
 function GameOfLifeGrid() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -11,8 +12,7 @@ function GameOfLifeGrid() {
   const mouseDivRef = useRef<HTMLDivElement>(null);
   const [gameOver, setGameOver] = useState(false);
   const [paused, setPaused] = useState(true);
-  const [pattern, setPattern] = useState<PatterNames>('quad');
-  const [displayEditor, setDisplayEditor] = useState(false);
+  const [stampMode, setStampMode] = useState<StampMode>('quad');
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -51,7 +51,7 @@ function GameOfLifeGrid() {
   }, []);
 
   useEffect(() => {
-    GOL.patternEditor = patterns[pattern];
+    GOL.patternEditor = patterns[stampMode];
     const canvas = canvasRef.current;
     const canvasClick = (event: MouseEvent) => {
       const target = event.target as HTMLCanvasElement;
@@ -59,7 +59,7 @@ function GameOfLifeGrid() {
       const elX = event.clientX - rect.left;
       const elY = event.clientY - rect.top;
       const { x, y } = GOL.getXY(elX, elY);
-      GOL.addPattern(x, y, pattern);
+      GOL.addPattern(x, y, stampMode);
     };
 
     if (canvas) {
@@ -70,7 +70,7 @@ function GameOfLifeGrid() {
         canvas.removeEventListener('click', canvasClick);
       }
     };
-  }, [pattern]);
+  }, [stampMode]);
 
   useEffect(() => {
     if (gameOver) {
@@ -82,79 +82,19 @@ function GameOfLifeGrid() {
   return (
     <div className="container">
       <div className="gameCanvasContainer">
-        <canvas
-          ref={canvasRef}
-        // style={{ zIndex: 1, opacity: 0.5 }}
-        >
+        <canvas ref={canvasRef}>
           <p>fallback</p>
         </canvas>
-        {/* <img
-          src={Dragon}
-          alt="Logo"
-          style={{
-            position: 'absolute',
-            zIndex: 0,
-            width: '500px',
-            height: '500px',
-          }}
-        /> */}
-      </div>
-      <div
-        className="mouseCanvas"
-        ref={mouseDivRef}
-      >
-        <canvas ref={mouseCanvasRef} />
+        <div
+          className="mouseCanvas"
+          ref={mouseDivRef}
+        >
+          <canvas ref={mouseCanvasRef} />
+        </div>
       </div>
       <div className="controlBar">
         <button
-          className="gameButton controlBarButton"
-          type="button"
-          onClick={() => {
-            setPattern('quad');
-          }}
-        >
-          quad
-        </button>
-        <button
-          className="gameButton controlBarButton"
-          type="button"
-          onClick={() => {
-            setPattern('deadSingle');
-          }}
-        >
-          dead
-        </button>
-        <button
-          className="gameButton controlBarButton"
-          type="button"
-          onClick={() => {
-            GOL.initGrid(
-              canvasRef.current,
-              mouseCanvasRef.current,
-              mouseDivRef.current,
-            );
-            GOL.startGame();
-          }}
-        >
-          Random Game
-        </button>
-        <button
-          className="gameButton controlBarButton"
-          type="button"
-          onClick={() => {
-            GOL.initGrid(
-              canvasRef.current,
-              mouseCanvasRef.current,
-              mouseDivRef.current,
-              initialGrid as Grid,
-            );
-            GOL.pauseGame();
-          }}
-        >
-          Reset Game
-        </button>
-        <button
-          className="gameButton controlBarButton"
+          className="gameButton"
           type="button"
           onClick={() => {
             if (paused) {
@@ -166,9 +106,37 @@ function GameOfLifeGrid() {
         >
           {paused ? 'Play' : 'Pause'}
         </button>
-
         <button
-          className="gameButton controlBarButton"
+          className="gameButton"
+          type="button"
+          onClick={() => {
+            GOL.initGrid(
+              canvasRef.current,
+              mouseCanvasRef.current,
+              mouseDivRef.current,
+            );
+            GOL.startGame();
+          }}
+        >
+          Random
+        </button>
+        <button
+          className="gameButton"
+          type="button"
+          onClick={() => {
+            GOL.initGrid(
+              canvasRef.current,
+              mouseCanvasRef.current,
+              mouseDivRef.current,
+              initialGrid as Grid,
+            );
+            GOL.pauseGame();
+          }}
+        >
+          Reset
+        </button>
+        <button
+          className="gameButton"
           type="button"
           onClick={() => {
             GOL.pauseGame();
@@ -178,25 +146,14 @@ function GameOfLifeGrid() {
           Clear
         </button>
         <button
-          className="gameButton controlBarButton"
+          className="gameButton"
           type="button"
           onClick={() => {
-            setDisplayEditor((prev) => !prev);
+            setStampMode((prev) => (prev === 'quad' ? 'deadSingle' : 'quad'));
           }}
         >
-          Editor
+          {stampMode === 'quad' ? 'Stamp: quad' : 'Stamp: erase'}
         </button>
-
-      </div>
-      <div>
-        {displayEditor && (
-          <PatternEditor
-            pattern={patterns[pattern]}
-            patternName={pattern}
-            setPattern={setPattern}
-            setDisplayEditor={setDisplayEditor}
-          />
-        )}
       </div>
     </div>
   );
