@@ -38,7 +38,7 @@ function App() {
             rel="noreferrer"
           >
             <p className="appCardName">GitHub</p>
-            <p className="appCardDescription">Code and side projects — including the source for this site.</p>
+            <p className="appCardDescription">Check out the source code for this site and other projects.</p>
           </a>
           <a
             className="appCard"
@@ -47,7 +47,7 @@ function App() {
             rel="noreferrer"
           >
             <p className="appCardName">LinkedIn</p>
-            <p className="appCardDescription">Work history and professional profile.</p>
+            <p className="appCardDescription">The boring stuff.</p>
           </a>
         </div>
       </section>
