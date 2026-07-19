@@ -101,32 +101,10 @@
   animation: pulse 3.4s ease-in-out infinite;
 }
 
-/* ---------- connect links ---------- */
+/* ---------- connect section ---------- */
 
-.connect {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  justify-content: center;
-  gap: 28px;
-  padding: 8px 16px 20px;
-  font-size: 0.9rem;
-}
-
-.connect a,
-.connect a:visited {
-  color: var(--haze);
-  text-decoration: none;
-  border-bottom: 1px solid transparent;
-  padding-bottom: 2px;
-  transition: color 0.2s, border-color 0.2s, text-shadow 0.2s;
-}
-
-.connect a:hover,
-.connect a:focus-visible {
-  color: var(--glow-bright);
-  border-color: var(--glow);
-  text-shadow: 0 0 10px rgba(94, 234, 212, 0.6);
+.connectSection {
+  padding-top: 0;
 }
 
 /* ---------- game section ---------- */

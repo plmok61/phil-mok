@@ -28,22 +28,29 @@ function App() {
         <div className="scrollHint" aria-hidden="true">▾</div>
       </main>
       <AppLinks />
-      <nav className="connect">
-        <a
-          href="https://github.com/plmok61"
-          target="_blank"
-          rel="noreferrer"
-        >
-          github
-        </a>
-        <a
-          href="https://www.linkedin.com/in/philiplmok/"
-          target="_blank"
-          rel="noreferrer"
-        >
-          linkedin
-        </a>
-      </nav>
+      <section className="appsSection connectSection">
+        <h2>Connect</h2>
+        <div className="appCards">
+          <a
+            className="appCard"
+            href="https://github.com/plmok61"
+            target="_blank"
+            rel="noreferrer"
+          >
+            <p className="appCardName">GitHub</p>
+            <p className="appCardDescription">Code and side projects — including the source for this site.</p>
+          </a>
+          <a
+            className="appCard"
+            href="https://www.linkedin.com/in/philiplmok/"
+            target="_blank"
+            rel="noreferrer"
+          >
+            <p className="appCardName">LinkedIn</p>
+            <p className="appCardDescription">Work history and professional profile.</p>
+          </a>
+        </div>
+      </section>
       <footer className="siteFooter">
         ©
         {' '}
