@@ -1,71 +1,92 @@
 :root {
-  --bg: #050a07;
-  --bg-elevated: #0a140d;
-  --green-dim: #12522e;
-  --green: #22c55e;
-  --green-bright: #4dff88;
-  --text: #c9e8d4;
-  --text-dim: #6f9b81;
+  --abyss: #04101c;
+  --depth: #082031;
+  --glow: #5eead4;
+  --glow-bright: #c9fff4;
+  --haze: #6f96a3;
+  --foam: #d7e8e8;
+  --line: rgba(94, 234, 212, 0.16);
 }
 
 html,
 body {
   min-height: 100%;
-  background-color: var(--bg);
-  color: var(--text);
-  font-family: var(--font-mono), 'Courier New', monospace;
 }
 
 body {
   margin: 0;
   padding: 0;
-}
-
-/* CRT scanline overlay */
-body::after {
-  content: '';
-  position: fixed;
-  inset: 0;
-  z-index: 100;
-  pointer-events: none;
-  background: repeating-linear-gradient(
-    to bottom,
-    rgba(0, 0, 0, 0) 0px,
-    rgba(0, 0, 0, 0) 2px,
-    rgba(77, 255, 136, 0.03) 3px,
-    rgba(0, 0, 0, 0) 4px
-  );
+  background-color: var(--abyss);
+  background-image:
+    radial-gradient(120% 60% at 50% -10%, rgba(35, 110, 140, 0.28), rgba(35, 110, 140, 0) 60%),
+    radial-gradient(90% 50% at 80% 110%, rgba(10, 45, 70, 0.5), rgba(10, 45, 70, 0) 60%);
+  background-attachment: fixed;
+  color: var(--foam);
+  font-family: var(--font-body), ui-rounded, system-ui, sans-serif;
+  line-height: 1.6;
+  overflow-x: hidden;
 }
 
 h1,
 h2,
 h3 {
-  font-family: var(--font-display), var(--font-mono), monospace;
-  color: var(--green-bright);
-  text-shadow: 0 0 8px rgba(77, 255, 136, 0.4);
+  font-family: var(--font-display), var(--font-body), sans-serif;
+  color: var(--glow-bright);
 }
 
-a {
-  color: var(--green);
-}
-
+a,
 a:visited {
-  color: var(--green);
+  color: var(--glow);
 }
 
 a:hover {
-  color: var(--green-bright);
-  text-shadow: 0 0 6px rgba(77, 255, 136, 0.5);
+  color: var(--glow-bright);
+  text-shadow: 0 0 10px rgba(94, 234, 212, 0.6);
 }
 
-@keyframes blink {
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--glow);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+@keyframes pulse {
   0%,
-  49% {
+  100% {
     opacity: 1;
+    text-shadow: 0 0 14px rgba(94, 234, 212, 0.9);
   }
 
-  50%,
+  50% {
+    opacity: 0.45;
+    text-shadow: none;
+  }
+}
+
+@keyframes drift {
+  from {
+    transform: translate(0, 0);
+  }
+
+  to {
+    transform: translate(-28px, 44px);
+  }
+}
+
+@keyframes breathe {
+  0%,
   100% {
-    opacity: 0;
+    box-shadow:
+      0 0 60px rgba(28, 160, 160, 0.14),
+      0 0 18px rgba(94, 234, 212, 0.10),
+      inset 0 0 60px rgba(2, 8, 14, 0.75);
+  }
+
+  50% {
+    box-shadow:
+      0 0 90px rgba(28, 160, 160, 0.24),
+      0 0 26px rgba(94, 234, 212, 0.18),
+      inset 0 0 60px rgba(2, 8, 14, 0.75);
   }
 }

@@ -8,7 +8,16 @@ interface AppEntry {
 
 // Add iOS apps here — each renders as a card linking to the App Store.
 const apps: AppEntry[] = [
-  // { name: 'My App', description: 'One-liner.', appStoreUrl: 'https://apps.apple.com/...' },
+  {
+    name: 'Luxwend',
+    description: 'A calm focus timer — a thread of light winds through a generated maze until your time is up.',
+    appStoreUrl: 'https://apps.apple.com/us/app/luxwend/id6785949480',
+  },
+  {
+    name: 'Drake Equation Calculator',
+    description: 'Estimate the number of communicative extraterrestrial civilizations in the Milky Way.',
+    appStoreUrl: 'https://apps.apple.com/us/app/drake-equation-calculator/id1360650293',
+  },
 ];
 
 function AppLinks() {
@@ -18,7 +27,7 @@ function AppLinks() {
 
   return (
     <section className="appsSection">
-      <h2>~/apps</h2>
+      <h2>Apps</h2>
       <div className="appCards">
         {apps.map((app) => (
           <a

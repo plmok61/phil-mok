@@ -1,59 +1,95 @@
-/* ---------- Header ---------- */
+/* ---------- drifting motes ---------- */
+
+.motes span {
+  position: fixed;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(94, 234, 212, 0.35), rgba(94, 234, 212, 0) 70%);
+  filter: blur(2px);
+  pointer-events: none;
+  z-index: 0;
+  animation: drift 26s ease-in-out infinite alternate;
+}
+
+.motes span:nth-child(1) { width: 10px; height: 10px; top: 18%; left: 8%; animation-duration: 31s; }
+.motes span:nth-child(2) { width: 6px;  height: 6px;  top: 62%; left: 14%; animation-duration: 24s; animation-delay: -9s; }
+.motes span:nth-child(3) { width: 14px; height: 14px; top: 30%; left: 88%; animation-duration: 37s; animation-delay: -17s; }
+.motes span:nth-child(4) { width: 7px;  height: 7px;  top: 78%; left: 82%; animation-duration: 28s; animation-delay: -4s; }
+.motes span:nth-child(5) { width: 5px;  height: 5px;  top: 8%;  left: 55%; animation-duration: 22s; animation-delay: -13s; }
+
+/* ---------- header ---------- */
 
 .siteHeader {
-  position: sticky;
-  top: 0;
-  z-index: 10;
+  position: relative;
+  z-index: 2;
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  padding: 0 16px;
-  height: 48px;
-  background-color: rgba(5, 10, 7, 0.9);
-  border-bottom: 1px solid var(--green-dim);
-  backdrop-filter: blur(4px);
+  align-items: baseline;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 28px 24px 8px;
 }
 
 .siteTitle {
   margin: 0;
-  font-size: 1rem;
-  letter-spacing: 0.12em;
+  font-size: 1.15rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--glow-bright);
+  text-shadow: 0 0 18px rgba(94, 234, 212, 0.55);
 }
 
-.siteTitle .cursor {
-  display: inline-block;
-  animation: blink 1.2s step-end infinite;
-  color: var(--green-bright);
+.siteTitle .dot {
+  color: var(--glow);
+  animation: pulse 3.4s ease-in-out infinite;
 }
 
 .headerLinks {
   display: flex;
-  gap: 16px;
+  gap: 22px;
+  font-size: 0.88rem;
 }
 
-.headerLinks a {
+.headerLinks a,
+.headerLinks a:visited {
+  color: var(--haze);
   text-decoration: none;
-  font-size: 0.9rem;
+  border-bottom: 1px solid transparent;
+  padding-bottom: 2px;
+  transition: color 0.2s, border-color 0.2s, text-shadow 0.2s;
 }
 
-/* ---------- Game section ---------- */
+.headerLinks a:hover,
+.headerLinks a:focus-visible {
+  color: var(--glow-bright);
+  border-color: var(--glow);
+  text-shadow: 0 0 10px rgba(94, 234, 212, 0.6);
+}
+
+/* ---------- game section ---------- */
 
 .container {
+  position: relative;
+  z-index: 1;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 16px 0 8px;
+  padding: 26px 16px 6px;
 }
 
 .gameCanvasContainer {
   position: relative;
   width: fit-content;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  overflow: hidden;
+  background: var(--depth);
+  animation: breathe 8s ease-in-out infinite;
 }
 
 .gameCanvasContainer canvas {
   display: block;
-  border: 1px solid var(--green-dim);
 }
 
 .mouseCanvas {
@@ -69,85 +105,107 @@
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
   width: 100%;
-  padding: 12px 0;
+  padding: 18px 0 8px;
 }
 
 .gameButton {
-  min-width: 80px;
-  height: 40px;
-  padding: 0 12px;
-  border: 1px solid var(--green-dim);
-  background-color: transparent;
-  color: var(--green);
-  font-family: var(--font-mono), monospace;
+  min-width: 88px;
+  padding: 9px 22px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: rgba(94, 234, 212, 0.06);
+  color: var(--glow);
+  font-family: var(--font-body), system-ui, sans-serif;
   font-size: 0.85rem;
-  border-radius: 4px;
+  letter-spacing: 0.06em;
   cursor: pointer;
-  transition: color 0.15s, border-color 0.15s, box-shadow 0.15s;
+  transition: background 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
 }
 
 .gameButton:hover {
-  color: var(--green-bright);
-  border-color: var(--green-bright);
-  box-shadow: 0 0 8px rgba(77, 255, 136, 0.3);
+  background: rgba(94, 234, 212, 0.14);
+  color: var(--glow-bright);
+  border-color: rgba(94, 234, 212, 0.45);
+  box-shadow: 0 0 16px rgba(94, 234, 212, 0.25);
 }
 
-/* ---------- Apps section ---------- */
+/* ---------- apps section ---------- */
 
 .appsSection {
-  max-width: 720px;
+  position: relative;
+  z-index: 1;
+  max-width: 700px;
   margin: 0 auto;
-  padding: 32px 16px 48px;
+  padding: 44px 24px 30px;
 }
 
 .appsSection h2 {
-  font-size: 1.1rem;
-  letter-spacing: 0.1em;
+  margin: 0 0 18px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--haze);
+  text-shadow: none;
 }
 
 .appCards {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
 }
 
 .appCard {
   display: block;
-  padding: 16px;
-  border: 1px solid var(--green-dim);
-  border-radius: 4px;
-  background-color: var(--bg-elevated);
+  padding: 20px 22px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: linear-gradient(160deg, rgba(14, 52, 74, 0.55), rgba(6, 24, 38, 0.55));
   text-decoration: none;
-  transition: border-color 0.15s, box-shadow 0.15s;
+  transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s;
 }
 
 .appCard:hover {
-  border-color: var(--green-bright);
-  box-shadow: 0 0 10px rgba(77, 255, 136, 0.25);
+  border-color: rgba(94, 234, 212, 0.5);
+  box-shadow: 0 0 30px rgba(28, 160, 160, 0.22);
+  transform: translateY(-2px);
   text-shadow: none;
 }
 
 .appCardName {
-  color: var(--green-bright);
-  font-family: var(--font-display), var(--font-mono), monospace;
-  font-size: 0.95rem;
-  margin: 0 0 6px;
+  margin: 0 0 8px;
+  font-family: var(--font-display), var(--font-body), sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--glow-bright);
 }
 
 .appCardDescription {
-  color: var(--text-dim);
-  font-size: 0.85rem;
   margin: 0;
+  font-size: 0.85rem;
+  line-height: 1.55;
+  color: var(--haze);
 }
 
-/* ---------- Footer ---------- */
+/* ---------- footer ---------- */
 
 .siteFooter {
+  position: relative;
+  z-index: 1;
   text-align: center;
-  padding: 16px;
-  color: var(--text-dim);
+  padding: 26px 16px 34px;
+  color: rgba(111, 150, 163, 0.65);
   font-size: 0.75rem;
-  border-top: 1px solid var(--green-dim);
+  letter-spacing: 0.06em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .motes span,
+  .siteTitle .dot,
+  .gameCanvasContainer {
+    animation: none;
+  }
 }

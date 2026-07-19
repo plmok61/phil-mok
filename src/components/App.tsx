@@ -10,6 +10,13 @@ import AppLinks from './AppLinks';
 function App() {
   return (
     <>
+      <div className="motes" aria-hidden="true">
+        <span />
+        <span />
+        <span />
+        <span />
+        <span />
+      </div>
       <SiteHeader />
       <GameOfLifeGrid />
       <AppLinks />

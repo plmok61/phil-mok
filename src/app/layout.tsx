@@ -1,17 +1,17 @@
 import React from 'react';
 import type { Metadata, Viewport } from 'next';
-import { Orbitron, JetBrains_Mono } from 'next/font/google';
+import { Quicksand, Nunito } from 'next/font/google';
 
-const orbitron = Orbitron({
+const quicksand = Quicksand({
   subsets: ['latin'],
-  weight: ['500', '700'],
+  weight: ['500', '600', '700'],
   variable: '--font-display',
 });
 
-const jetbrainsMono = JetBrains_Mono({
+const nunito = Nunito({
   subsets: ['latin'],
-  weight: ['400', '700'],
-  variable: '--font-mono',
+  weight: ['400', '600', '700'],
+  variable: '--font-body',
 });
 
 export const metadata: Metadata = {
@@ -27,7 +27,7 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className={`${orbitron.variable} ${jetbrainsMono.variable}`}>
+      <body className={`${quicksand.variable} ${nunito.variable}`}>
         <div id="root">{children}</div>
       </body>
     </html>

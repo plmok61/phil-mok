@@ -11,17 +11,17 @@ import {
   Cell, Grid, HSLColor, HSLColorsMap, PatterNames, Pattern, Row,
 } from '../types';
 
-// Terminal green phosphor: alive cells flash near-white and
-// decay through neon -> green -> deep green -> background.
+// Bioluminescence: alive cells flash near-white and
+// decay through aqua -> teal -> deep blue -> dark water.
 const hsl: HSLColorsMap = {
-  bg: { h: 145, s: 33, l: 3 }, // ≈ #050a07
-  deepGreen: { h: 145, s: 64, l: 19 }, // ≈ #12522e
-  green: { h: 142, s: 71, l: 45 }, // ≈ #22c55e
-  neon: { h: 140, s: 100, l: 65 }, // ≈ #4dff88
-  white: { h: 140, s: 100, l: 92 },
+  bg: { h: 207, s: 72, l: 6 }, // ≈ #04121a deep water
+  deepBlue: { h: 204, s: 62, l: 21 }, // ≈ #145273
+  teal: { h: 187, s: 58, l: 40 }, // ≈ #2b96a1
+  aqua: { h: 168, s: 82, l: 66 }, // ≈ #61efd0
+  white: { h: 168, s: 100, l: 92 },
 };
 
-const colors = [hsl.bg, hsl.deepGreen, hsl.green, hsl.neon, hsl.white];
+const colors = [hsl.bg, hsl.deepBlue, hsl.teal, hsl.aqua, hsl.white];
 const steps = [34, 21, 13, 8]; // one entry per gradient segment (colors.length - 1)
 const fadeTotal = steps.reduce((acc, num) => {
   const result = acc + num;

@@ -4,24 +4,24 @@ function SiteHeader() {
   return (
     <header className="siteHeader">
       <h1 className="siteTitle">
-        &gt; PHIL_MOK
-        <span className="cursor">_</span>
+        Phil Mok
+        <span className="dot">.</span>
       </h1>
       <nav className="headerLinks">
-        {/* future: <a href="/stories">[stories]</a> */}
+        {/* future: <a href="/stories">stories</a> */}
         <a
           href="https://github.com/plmok61"
           target="_blank"
           rel="noreferrer"
         >
-          [github]
+          github
         </a>
         <a
           href="https://www.linkedin.com/in/philiplmok/"
           target="_blank"
           rel="noreferrer"
         >
-          [linkedin]
+          linkedin
         </a>
       </nav>
     </header>
