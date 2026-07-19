@@ -17,6 +17,7 @@ export type PatterNames = 'single' |
   'fireship' |
   'glider' |
   'gosperGliderGun' |
+  'lwss' |
   'pulsar' |
   'quasar' |
   'quad' |

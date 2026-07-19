@@ -1,3 +1,12 @@
+/* ---------- background life board ---------- */
+
+.backgroundCanvas {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
 /* ---------- drifting motes ---------- */
 
 .motes span {

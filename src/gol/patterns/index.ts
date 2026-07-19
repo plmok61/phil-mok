@@ -3,6 +3,7 @@ import blinker from './blinker';
 import fireship from './fireship';
 import glider from './glider';
 import gosperGliderGun from './gosperGlideerGun';
+import lwss from './lwss';
 import pulsar from './pulsar';
 import quasar from './quasar';
 import vampire from './vampire';
@@ -15,6 +16,7 @@ export default {
   fireship,
   glider,
   gosperGliderGun,
+  lwss,
   pulsar,
   quasar,
   vampire,

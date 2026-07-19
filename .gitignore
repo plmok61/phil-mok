@@ -16,8 +16,12 @@ npm-debug.log
 
 # planning scratch
 PLAN.md
+screenshots/
 
 # next
 .next
 dist
 tsconfig.tsbuildinfo
+.vercel
+.env*
+.claude/settings.local.json

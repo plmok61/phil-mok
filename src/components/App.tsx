@@ -1,14 +1,18 @@
 'use client';
 
-import React from 'react';
+import React, { useRef } from 'react';
 import '../styles/index.css';
 import '../styles/App.css';
 import GameOfLifeGrid from './GameOfLifeGrid';
 import AppLinks from './AppLinks';
+import BackgroundLife from './BackgroundLife';
 
 function App() {
+  const heroRef = useRef<HTMLElement>(null);
+
   return (
     <>
+      <BackgroundLife heroRef={heroRef} />
       <div className="motes" aria-hidden="true">
         <span />
         <span />
@@ -16,10 +20,9 @@ function App() {
         <span />
         <span />
       </div>
-      <main className="hero">
+      <main className="hero" ref={heroRef}>
         <h1 className="siteTitle">
           Phil Mok
-          <span className="dot">.</span>
         </h1>
         <GameOfLifeGrid />
         <div className="scrollHint" aria-hidden="true">▾</div>
